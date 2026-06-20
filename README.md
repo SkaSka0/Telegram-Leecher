@@ -6,7 +6,7 @@
 
 <br>
 
-## Credits
+## 🙏 Credits
 
 This project is based on the original work by
 [XronTrix10/Telegram-Leecher](https://github.com/XronTrix10/Telegram-Leecher).
@@ -24,7 +24,7 @@ Special thanks to XronTrix10 for creating the original project.
 
 ## 🎓 **How To Deploy**
 
-<h3>Read <a href="https://github.com/lllSkaSkaSkalll/Telegram-Leecher/wiki/Instructions">INSTRUCTIONS</a></h3>
+<h3>Read <a href="https://github.com/SkaSka0/Telegram-Leecher/wiki/Instructions">INSTRUCTIONS</a></h3>
 
 <br>
 
