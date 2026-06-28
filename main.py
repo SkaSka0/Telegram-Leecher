@@ -17,171 +17,182 @@
 # @markdown - `API_HASH`
 # @markdown - `BOT_TOKEN`
 # @markdown - `USER_ID`
-# @markdown - `DUMP_ID`
+# @markdown - `DUMP_ID` `(Private Channel/Grub)`
 # @markdown
 # @markdown 📍 You can open Secrets from the **left sidebar → 🔑 Secrets**
 # @markdown
 # @markdown After adding them, simply **run this cell to start the bot**.
-# @markdown 
+# @markdown
 # @markdown ---
 
-from google.colab import userdata
+import json
+import os
+import shutil
+import subprocess
 
-API_ID = userdata.get("API_ID")
-API_HASH = userdata.get("API_HASH")
-BOT_TOKEN = userdata.get("BOT_TOKEN")
-USER_ID = userdata.get("USER_ID")
-DUMP_ID = userdata.get("DUMP_ID")
-
-required_vars = {
-    "API_ID": API_ID,
-    "API_HASH": API_HASH,
-    "BOT_TOKEN": BOT_TOKEN,
-    "USER_ID": USER_ID,
-    "DUMP_ID": DUMP_ID
-}
-
-for key, value in required_vars.items():
-    if value is None or value == "":
-        raise ValueError(f"Missing secret: {key}")
-
-# convert to int after validation
-API_ID = int(API_ID)
-USER_ID = int(USER_ID)
-DUMP_ID = int(DUMP_ID)
-
-import subprocess, json, shutil, os
 from IPython.display import clear_output
 
-# =====================================================================
-# 📌 Unified Simple Logging
-# =====================================================================
+# 📌 Config
 APPNAME = "TelegramLeecher"
+REPO_URL = "https://github.com/SkaSka0/Telegram-Leecher"
+REPO_NAME = "Telegram-Leecher"
+REQUIRED_SECRETS = ("API_ID", "API_HASH", "BOT_TOKEN", "USER_ID", "DUMP_ID")
 
+target_branch = "main"  # @param ["colab-mirror", "main"]
+
+# 📌 Logging
 def log(message, level="INFO"):
     print(f"{level}:{APPNAME}:{message}")
 
-# =====================================================================
-# 📌 Start
-# =====================================================================
+# 📌 Shell helper (replaces the 3x duplicated Popen+readline blocks)
+def run_streamed(cmd, error_message=None):
+    """Run a command, streaming each stdout/stderr line through log().
 
-log("Initializing setup...")
-log("Credentials loaded from Colab Secrets")
+    cmd can be a string (shell=True) or a list (shell=False), matching
+    how the original script mixed both styles.
+    """
+    proc = subprocess.Popen(
+        cmd,
+        shell=isinstance(cmd, str),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+    )
 
-# Format DUMP_ID
-if DUMP_ID and len(str(DUMP_ID)) == 10 and "-100" not in str(DUMP_ID):
-    log(f"Formatting DUMP_ID: adding -100 prefix to {DUMP_ID}")
-    DUMP_ID = int("-100" + str(DUMP_ID))
+    for line in proc.stdout:
+        if line.strip():
+            log(line.strip())
 
-# Remove default Colab sample data
-if os.path.exists("/content/sample_data"):
-    log("Removing default Colab sample data directory")
-    shutil.rmtree("/content/sample_data")
+    proc.wait()
 
-# Git repo data
-repo_url = "https://github.com/lIlSkaSkaSkalIl/Telegram-Leecher"
-repo_name = "Telegram-Leecher"
+    if proc.returncode != 0:
+        log(error_message or f"Command failed: {cmd}", level="ERROR")
 
-# Remove old folder if exists
-if os.path.exists(repo_name):
-    log(f"Existing '{repo_name}' folder found - removing...")
-    shutil.rmtree(repo_name)
+    return proc.returncode
 
-# Clone fresh repository
-log(f"Cloning repository from {repo_url}")
-clone_result = subprocess.run(["git", "clone", repo_url], capture_output=True, text=True)
+# 📌 Steps
+def load_credentials():
+    """Read + validate secrets from Colab, return a normalized dict."""
+    from google.colab import userdata
 
-if clone_result.returncode != 0:
-    log(f"Failed to clone repository: {clone_result.stderr}", level="ERROR")
-    raise RuntimeError("Repository cloning failed")
+    log("Initializing setup...")
 
-# Install system dependencies
-log("Installing system dependencies (ffmpeg, aria2)...")
-install_proc = subprocess.Popen(
-    "apt install ffmpeg aria2 -y",
-    shell=True,
-    stdout=subprocess.PIPE,
-    stderr=subprocess.PIPE,
-    text=True
-)
+    raw = {key: userdata.get(key) for key in REQUIRED_SECRETS}
 
-while True:
-    line = install_proc.stdout.readline()
-    if not line:
-        break
-    if line.strip():
-        log(line.strip())
+    missing = [key for key, value in raw.items() if value is None or value == ""]
+    if missing:
+        for key in missing:
+            log(f"Missing secret: {key}", level="ERROR")
+        raise ValueError(f"Missing secret(s): {', '.join(missing)}")
 
-install_proc.wait()
+    log("Credentials loaded from Colab Secrets")
 
-if install_proc.returncode != 0:
-    log("System dependencies installation failed", level="ERROR")
-    for line in install_proc.stderr:
-        log(line.strip(), level="ERROR")
+    creds = {
+        "API_ID": int(raw["API_ID"]),
+        "API_HASH": raw["API_HASH"],
+        "BOT_TOKEN": raw["BOT_TOKEN"],
+        "USER_ID": int(raw["USER_ID"]),
+        "DUMP_ID": int(raw["DUMP_ID"]),
+    }
 
-# Install Megatools
-log("Installing megatools...")
-megatools_proc = subprocess.Popen(
-    "apt-get install -y megatools",
-    shell=True,
-    stdout=subprocess.PIPE,
-    stderr=subprocess.PIPE,
-    text=True
-)
+    # Format DUMP_ID (add -100 prefix for channel/supergroup IDs)
+    dump_id_str = str(creds["DUMP_ID"])
+    if len(dump_id_str) == 10 and "-100" not in dump_id_str:
+        log(f"Formatting DUMP_ID: adding -100 prefix to {creds['DUMP_ID']}")
+        creds["DUMP_ID"] = int("-100" + dump_id_str)
 
-while True:
-    line = megatools_proc.stdout.readline()
-    if not line:
-        break
-    if line.strip():
-        log(line.strip())
+    return creds
 
-megatools_proc.wait()
 
-# Install Python dependencies
-log("Installing Python dependencies...")
-req_path = "/content/Telegram-Leecher/requirements.txt"
-pip_proc = subprocess.Popen(
-    ["pip3", "install", "-r", req_path],
-    stdout=subprocess.PIPE,
-    stderr=subprocess.STDOUT,
-    text=True,
-)
+def clean_sample_data():
+    if os.path.exists("/content/sample_data"):
+        log("Removing default Colab sample data directory")
+        shutil.rmtree("/content/sample_data")
 
-for line in pip_proc.stdout:
-    log(line.strip())
 
-pip_proc.wait()
+def clone_repo(branch):
+    if os.path.exists(REPO_NAME):
+        log(f"Existing '{REPO_NAME}' folder found - removing...")
+        shutil.rmtree(REPO_NAME)
 
-if pip_proc.returncode != 0:
-    log("Python dependencies installation failed", level="ERROR")
+    log(f"Cloning repository from {REPO_URL} branch: {branch}")
+    result = subprocess.run(
+        ["git", "clone", "-b", branch, REPO_URL], capture_output=True, text=True
+    )
 
-# Save credentials.json
-log("Saving credentials to credentials.json...")
-credentials = {
-    "API_ID": API_ID,
-    "API_HASH": API_HASH,
-    "BOT_TOKEN": BOT_TOKEN,
-    "USER_ID": USER_ID,
-    "DUMP_ID": DUMP_ID,
-}
+    if result.returncode != 0:
+        log(f"Failed to clone repository: {result.stderr}", level="ERROR")
+        raise RuntimeError("Repository cloning failed")
 
-try:
-    with open('/content/Telegram-Leecher/credentials.json', 'w') as file:
-        json.dump(credentials, file, indent=4)
-    log("Credentials saved successfully")
-except Exception as e:
-    log(f"Failed to save credentials: {e}", level="ERROR")
-    raise
 
-# Remove previous bot session
-session_path = "/content/Telegram-Leecher/my_bot.session"
-if os.path.exists(session_path):
-    log("Removing previous bot session file")
-    os.remove(session_path)
+def install_system_deps():
+    log("Installing system dependencies (ffmpeg, aria2)...")
+    run_streamed(
+        "apt install ffmpeg aria2 -y",
+        error_message="System dependencies installation failed",
+    )
 
-clear_output()
-log("Launching Telegram Leecher bot...")
 
-# Run bot
-!cd /content/Telegram-Leecher/ && python3 -m colab_leecher  # type: ignore
+def install_megatools():
+    log("Installing megatools...")
+    run_streamed(
+        "apt-get install -y megatools",
+        error_message="Megatools installation failed",
+    )
+
+
+def install_python_deps():
+    log("Installing Python dependencies...")
+    req_path = f"/content/{REPO_NAME}/requirements.txt"
+    run_streamed(
+        ["pip3", "install", "-r", req_path],
+        error_message="Python dependencies installation failed",
+    )
+
+
+def save_credentials(creds):
+    log("Saving credentials to credentials.json...")
+    creds_path = f"/content/{REPO_NAME}/credentials.json"
+    try:
+        with open(creds_path, "w") as file:
+            json.dump(creds, file, indent=4)
+        log("Credentials saved successfully")
+    except Exception as e:
+        log(f"Failed to save credentials: {e}", level="ERROR")
+        raise
+
+
+def clear_old_session():
+    session_path = f"/content/{REPO_NAME}/my_bot.session"
+    if os.path.exists(session_path):
+        log("Removing previous bot session file")
+        os.remove(session_path)
+
+
+def prepare_launch():
+    """Run everything up to (but not including) starting the bot.
+
+    The bot itself is launched via the Colab `!` magic command at the
+    bottom of the cell, since that syntax only works at cell-level and
+    not inside a regular Python function.
+    """
+    clear_output()
+    log("Launching Telegram Leecher bot...")
+
+# 📌 Orchestration
+def main():
+    creds = load_credentials()
+    clean_sample_data()
+    clone_repo(target_branch)
+    install_system_deps()
+    install_megatools()
+    install_python_deps()
+    save_credentials(creds)
+    clear_old_session()
+    prepare_launch()
+
+
+main()
+
+# Run bot (must stay at cell-level to use Colab's `!` magic command)
+get_ipython().system(f'cd /content/{REPO_NAME}/ && python3 -m colab_leecher')  # type: ignore
