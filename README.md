@@ -30,6 +30,37 @@ This repository is actively maintained and includes fixes, enhancements, and doc
 
 This project is independently maintained while preserving compatibility with the original GPL-3.0 licensed codebase.
 
+
+## 🧩 Codebase Structure
+
+```
+main.py                          => Colab launcher / setup script
+README.md                        => Project documentation
+LICENSE                          => Project license
+requirements.txt                 => Python dependency list
+custom_thmb.jpg                  => Default bot thumbnail
+
+colab_leecher/                   => Main bot package
+├── __init__.py                  => Initializes Pyrogram bot, reads credentials, creates client
+├── __main__.py                  => Main bot entry point and command/callback handlers
+├── downlader/                   => Downloader modules for various sources
+│   ├── aria2.py                 => Direct link downloader using aria2c
+│   ├── gdrive.py                => Google Drive file/folder downloader
+│   ├── mega.py                  => Mega.nz downloader via megadl
+│   ├── manager.py               => Router/manager for download types
+│   ├── telegram.py              => Downloader for files from Telegram messages
+│   ├── terabox.py               => Fetches Terabox direct link then downloads
+│   └── ytdl.py                  => YouTube/other sites downloader via yt-dlp
+├── uploader/                    => Upload modules for downloaded results
+│   └── telegram.py              => Uploads files to Telegram
+└── utility/                     => Utilities, state, and orchestrator
+    ├── converters.py            => Video conversion, zip/split, extraction
+    ├── handler.py               => Handler for leech/mirror/upload/cancel processes
+    ├── helper.py                => General helpers, status bar, link detection, thumbnail
+    ├── task_manager.py          => Main task flow manager
+    └── variables.py             => Global variables, paths, settings, bot state
+```
+
 ## **📖 Click To Open The Notebook**
 
 <a href="https://colab.research.google.com/drive/12hdEqaidRZ8krqj7rpnyDzg1dkKmvdvp?usp=sharing" target="_parent"><img src="https://user-images.githubusercontent.com/125879861/255389999-a0d261cf-893a-46a7-9a3d-2bb52811b997.png" alt="Open In Colab" width=200px/></a>
