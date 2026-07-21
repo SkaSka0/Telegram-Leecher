@@ -98,8 +98,8 @@ colab_leecher/                   => Main bot package
 - Google Drive Link ( Auto Authenticate ) ✅
 - Telegram File Link ✅
 - Video Links ( YouTube and 2000 More Sites 😉 ) ✅
+- Mega.nz Link ✅
 - Torrent / Magnet Link ❌ ( Intentionally omitted 😔 )
-- Mega.nz Link ❌ ( Coming Soon ♨️)
 - GDTot, Sharer and Short Links ❌ ( Coming Soon ♨️)
 
 ## **🔥 Benefits**
@@ -121,7 +121,7 @@ colab_leecher/                   => Main bot package
 
 ## **🚨 NOTE:**
 
-- Video Splitting is intentionally disabled to avoid video corruptions. Instead, they are zipped if they exceed MAX_UPLOAD_SIZE
+- Video splitting is now automatic and can be configured via the `MAX_SPLIT_SIZE` variable in `variables.py`. Files exceeding this size are automatically split into parts.
 <!-- - Magnet or Torrent Links are supported, But avoid using, because `Google Colab Strictly Prohibits Torrents` -->
 - Downloading `YouTube Video without permission of the owner` can lead to copyright issues. Use with Caution
 
