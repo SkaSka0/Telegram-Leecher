@@ -11,9 +11,9 @@ approach it), see [`ROADMAP.md`](./ROADMAP.md).
 
 ## Phase 0 — Documentation Sync
 
-- [ ] Update "Supported Links" table — mark Mega.nz as ✅
-- [ ] Update "Supported Links" table — mark Terabox as ✅ (add if missing)
-- [ ] Re-check "Codebase Structure" section for accuracy
+- [x] Update "Supported Links" table — mark Mega.nz as ✅
+- [x] Update "Supported Links" table — mark Terabox as ✅ (add if missing)
+- [x] Re-check "Codebase Structure" section for accuracy
 
 ---
 
