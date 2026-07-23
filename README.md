@@ -123,6 +123,7 @@ colab_leecher/                   => Main bot package
 
 - Video splitting is now automatic and can be configured via the `MAX_SPLIT_SIZE` variable in `variables.py`. Files exceeding this size are automatically split into parts.
 <!-- - Magnet or Torrent Links are supported, But avoid using, because `Google Colab Strictly Prohibits Torrents` -->
+- **First-time setup:** after running the Colab cell and seeing `Colab Leecher Started !` in the logs, send **at least one message** to your `DUMP_ID` group/channel before starting a task — even if the bot is already an admin there. Pyrogram cannot resolve a peer it has no prior interaction with, so without this the bot will fail with a `PEER_ID_INVALID` error as soon as it tries to send the task status message.
 - Downloading `YouTube Video without permission of the owner` can lead to copyright issues. Use with Caution
 
 ## **🤙🏼 Connect With Us**
