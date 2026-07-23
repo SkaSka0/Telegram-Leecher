@@ -35,15 +35,25 @@ can corrupt or silently drop download/upload results.
 | # | Issue | Location | Impact |
 |---|-------|----------|--------|
 | 1 | `open(file_name, "ab")` is used without deleting a pre-existing file first | `gdrive.py` → `gDownloadFile` | If a Google Drive task is retried with the same filename, old bytes accumulate on top of new ones → corrupted file |
-| 2 | `token.pickle` is never refreshed when expired | `gdrive.py` → `build_service` | The bot fails completely with an unclear error once the token expires; the user must manually regenerate it |
-| 3 | `ProcessPoolExecutor()` is instantiated but never used (dead code) | `manager.py` → `downloadManager` (Mega branch) | Minor resource leak; signals an unfinished Mega refactor |
-| 4 | Google Docs/Sheets shortcuts inside a folder are not filtered out before calling `gDownloadFile` | `gdrive.py` → `gDownloadFolder` | A folder leech can silently fail mid-process with no clear message to the user |
-| 5 | Many `except Exception: pass` / bare `logging.error` blocks with no propagation | `helper.py`, `handler.py`, etc. | A task can hang or "complete" while files are actually missing, with no notification to the user |
+| 2 | `cancelTask()` calls `BOT.TASK.cancel()` *before* deleting the status message and sending the failure notification | `handler.py` → `cancelTask` | Since `BOT.TASK` is almost always the very coroutine `cancelTask()` is running inside of (called deep in the leech call stack), cancelling it early injects a `CancelledError` at the next `await` checkpoint — aborting cleanup and the user-facing notification before they run. The failure is invisible until the Colab cell is manually interrupted, at which point an unrelated-looking `asyncio.exceptions.CancelledError` traceback surfaces. This blocks reliable testing of *any* other fix that relies on `cancelTask()` reporting failures to the user (e.g. Issue #3 below) |
+| 3 | `token.pickle` is never refreshed when expired | `gdrive.py` → `build_service` | The bot fails completely with an unclear error once the token expires; the user must manually regenerate it. **Note:** verifying the failure-path behavior of this fix (expired file / revoked refresh token / missing file) depends on Issue #2 being fixed first, since those paths all report through `cancelTask()` |
+| 4 | `ProcessPoolExecutor()` is instantiated but never used (dead code) | `manager.py` → `downloadManager` (Mega branch) | Minor resource leak; signals an unfinished Mega refactor |
+| 5 | Google Docs/Sheets shortcuts inside a folder are not filtered out before calling `gDownloadFile` | `gdrive.py` → `gDownloadFolder` | A folder leech can silently fail mid-process with no clear message to the user |
+| 6 | Many `except Exception: pass` / bare `logging.error` blocks with no propagation | `helper.py`, `handler.py`, etc. | A task can hang or "complete" while files are actually missing, with no notification to the user |
 
 **Why this comes first:** these bugs undermine trust in the transfer
 result itself — a silently corrupted or silently failed file is far more
 costly to discover (and fix) after the fact than a UI bug. Fixing these
 before anything else protects the core value proposition of the bot.
+
+**Why Issue #2 was inserted ahead of Issue #3:** Issue #2 was discovered
+while manually testing the Issue #3 fix (`token.pickle` refresh) — the
+failure-path scenarios for #3 (expired token with an invalid refresh
+token, an outdated token format, a missing token file) all route through
+`cancelTask()`, so they couldn't be reliably confirmed until the
+self-cancellation bug in `cancelTask()` itself was resolved. See
+[`TESTING.md`](./TESTING.md) → Phase 1, Item 2 for the scenarios and
+results that led to this discovery.
 
 ---
 
@@ -104,8 +114,11 @@ Only once the above phases are complete does it make sense to add:
 
 **Recommended starting point: Phase 0 → Phase 1.**
 
-The issues listed in Phase 1 are not "minor" — items #1 and #4 in
+The issues listed in Phase 1 are not "minor" — items #1 and #5 in
 particular can silently corrupt or drop user data, which places them
-above any new feature work. Phase 2 (refactoring) should only begin once
-the core reliability issues are resolved, so structural changes aren't
-built on top of a still-buggy foundation.
+above any new feature work. Item #2 (`cancelTask()` self-cancellation)
+was elevated ahead of item #3 (`token.pickle` refresh) specifically
+because #3's failure-path testing depends on #2 being fixed first —
+sequencing matters here, not just severity. Phase 2 (refactoring) should
+only begin once the core reliability issues are resolved, so structural
+changes aren't built on top of a still-buggy foundation.
