@@ -6,7 +6,7 @@ import logging
 import pickle
 from natsort import natsorted
 from re import search as re_search
-from os import makedirs, path as ospath
+from os import makedirs, remove as osremove, path as ospath
 from urllib.parse import parse_qs, urlparse
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -148,6 +148,12 @@ async def gDownloadFile(file_id, path):
             try:
                 file_name = file.get("name", f"untitleddrivefile_{file_id}")
                 file_name = ospath.join(path, file_name)
+
+                # Remove any pre-existing file with the same name to avoid
+                # appending new chunks on top of stale/partial data.
+                if ospath.exists(file_name):
+                    osremove(file_name)
+                
                 # Create a BytesIO stream to hold the downloaded file data.
                 file_contents = io.BytesIO()
 
