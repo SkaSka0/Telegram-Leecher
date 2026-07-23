@@ -213,12 +213,24 @@ async def Unzip_Handler(down_path: str, remove: bool):
     if remove:
         shutil.rmtree(down_path)
 
-
 async def cancelTask(Reason: str):
+    """Cancels the on-going task and notifies the owner.
+
+    Cleans up the working directory and sends a cancellation notice to
+    OWNER *before* actually cancelling BOT.TASK. Cancelling the task is
+    done last because BOT.TASK is almost always the very task this
+    coroutine is running inside of (called from deep within the leech
+    call stack) — calling .cancel() on it earlier injects a
+    CancelledError at the next await checkpoint, silently aborting the
+    cleanup/notification steps that follow.
+
+    Args:
+        Reason: Human-readable reason shown to the user.
+    """
     text = f"#TASK_STOPPED\n\n**╭🔗 Source » **__[Here]({Messages.src_link})__\n**├🦄 Mode » **__{BOT.Mode.mode.capitalize()}__\n**├🤔 Reason » **__{Reason}__\n**╰🍃 Spent Time » **__{getTime((datetime.now() - BotTimes.start_time).seconds)}__"
+
     if BOT.State.task_going:
         try:
-            BOT.TASK.cancel()  # type: ignore
             shutil.rmtree(Paths.WORK_PATH)
         except Exception as e:
             logging.error(f"Error Deleting Task Folder: {e}")
@@ -226,26 +238,39 @@ async def cancelTask(Reason: str):
             logging.info(f"On-Going Task Cancelled !")
         finally:
             BOT.State.task_going = False
-            await MSG.status_msg.delete()
-            await colab_bot.send_message(
-                chat_id=OWNER,
-                text=text,
-                reply_markup=InlineKeyboardMarkup(
-                    [
-                        [
-                            InlineKeyboardButton(  # Opens a web URL
-                                "Channel 📣",
-                                url="https://t.me/Colab_Leecher",
-                            ),
-                            InlineKeyboardButton(  # Opens a web URL
-                                "Group 💬",
-                                url="https://t.me/Colab_Leecher_Discuss",
-                            ),
-                        ],
-                    ]
-                ),
-            )
 
+            try:
+                await MSG.status_msg.delete()
+            except Exception as de:
+                logging.error(f"Error deleting status message: {de}")
+
+            try:
+                await colab_bot.send_message(
+                    chat_id=OWNER,
+                    text=text,
+                    reply_markup=InlineKeyboardMarkup(
+                        [
+                            [
+                                InlineKeyboardButton(
+                                    "Channel 📣",
+                                    url="https://t.me/Colab_Leecher",
+                                ),
+                                InlineKeyboardButton(
+                                    "Group 💬",
+                                    url="https://t.me/Colab_Leecher_Discuss",
+                                ),
+                            ],
+                        ]
+                    ),
+                )
+            except Exception as se:
+                logging.error(f"Error sending cancellation notice: {se}")
+
+            # Cancel LAST — everything the user needs to see has already
+            # been sent, so it's now safe to interrupt the remaining
+            # call stack.
+            if BOT.TASK is not None:
+                BOT.TASK.cancel()
 
 async def SendLogs(is_leech: bool):
     global Transfer, Messages
