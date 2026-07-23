@@ -67,16 +67,18 @@ colab_leecher/                   => Main bot package
 
 > If the Google Colab notebook link does not work, simply create a new Colab notebook and copy-paste the code from [`main.py`](./main.py) into a single cell, then run it.
 
+## 🎓 **How To**
 
-## 🎓 **How To Deploy**
+### Deploy
 
-<h3>Read <a href="https://github.com/SkaSka0/Telegram-Leecher/wiki/Instructions">INSTRUCTIONS</a></h3>
-
-<br>
-
-<h3>Watch YouTube Tutorial</h3>
+- <h3>Read <a href="https://github.com/SkaSka0/Telegram-Leecher/wiki/Instructions">INSTRUCTIONS</a></h3>
+- <h3>Watch YouTube Tutorial</h3>
 
 [![Watch It](https://img.youtube.com/vi/6LvYd-oO3U0/0.jpg)](https://www.youtube.com/watch?v=6LvYd-oO3U0)
+
+### Google Drive Authentication
+
+- <h3>Read <a href="https://github.com/SkaSka0/Telegram-Leecher/wiki/Google-Drive-Authentication">GOOGLE DRIVE AUTHENTICATION</a></h3>
 
 ## **💡 Features**
 
