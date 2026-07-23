@@ -76,3 +76,4 @@ caption feature.)*
 
 - [ ] Design fixed caption format for video uploads (data sourced from
       external JSON, not parsed from the video file itself)
+- [x] Add "send a message to DUMP_ID before first task" note to README NOTE section and wiki INSTRUCTIONS
