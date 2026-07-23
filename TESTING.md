@@ -55,7 +55,7 @@ other.
 | 1 | Trigger `cancelTask()` via Google Drive refresh_token invalid (re-run Item 3, Scenario 3) | Not started | Confirms `#TASK_STOPPED` message reaches OWNER chat without manually interrupting the cell. |
 | 2 | Trigger `cancelTask()` via Google Drive outdated token format (re-run Item 3, Scenario 4) | Not started | Same confirmation as above. |
 | 3 | Trigger `cancelTask()` via missing `token.pickle` (re-run Item 3, Scenario 5) | Not started | Same confirmation as above. |
-| 4 | Manual "Cancel ❌" button pressed mid-task | Not started | Regression check — confirm `"User Cancelled !"` message still sends correctly after the reordering. |
+| 4	| Manual "Cancel ❌" button pressed mid-task	| Fail |	FileNotFoundError in Leech() at os.stat(new_path). Root cause is a separate race: cancelTask() runs in a different asyncio Task (the callback handler) than BOT.TASK, so Paths.WORK_PATH gets removed while Leech() is still mid-upload, before BOT.TASK.cancel() is delivered. See "Bugs Found During Testing" below. |
 | 5 | Trigger `cancelTask()` from a non-Google-Drive source (e.g. broken Terabox or aria2 link) | Not started | Confirms the fix isn't accidentally scoped only to the Google Drive path. |
 | 6 | Confirm `Paths.WORK_PATH` removal still happens in all of the above | Not started | Regression check on the `shutil.rmtree` cleanup step. |
 
@@ -92,9 +92,6 @@ _No scenarios logged yet. Suggested scenarios once testing begins:_
 
 ## Bugs Found During Testing, Not Yet Promoted
 
-Use this section as a holding area for bugs discovered while testing an
-item above but not yet given an official entry in `PROGRESS.md` /
-`ROADMAP.md`.
-
-_None currently pending — the `cancelTask()` self-cancellation bug found
-here was promoted to Phase 1, Item 2 in `PROGRESS.md` and `ROADMAP.md`._
+- Use this section as a holding area for bugs discovered while testing an item above but not yet given an official entry in `PROGRESS.md` / `ROADMAP.md`.
+- _None currently pending — the `cancelTask()` self-cancellation bug found here was promoted to Phase 1, Item 2 in `PROGRESS.md` and `ROADMAP.md`._
+- `Leech()` continues operating on files after `cancelTask()` has already run `shutil.rmtree(Paths.WORK_PATH)`, when `cancelTask()` is triggered from a different asyncio Task than BOT.TASK (e.g. the Cancel button handler). `BOT.TASK.cancel()` doesn't interrupt synchronously — there's a window where `Leech()` runs on deleted files. Candidate fix: explicit `BOT.State.task_going` guard checks at loop checkpoint boundaries in `Leech()` and `Do_Leech()`/`Do_Mirror()`/`Do_Local_Mirror()`. Not yet promoted to PROGRESS.md — pending confirmation the guard-check patch resolves it.
