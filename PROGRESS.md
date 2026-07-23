@@ -2,7 +2,8 @@
 
 Quick-glance checklist for tracking implementation status. For the reasoning
 behind each item (why it's prioritized, what risk it addresses, or how to
-approach it), see [`ROADMAP.md`](./ROADMAP.md).
+approach it), see [`ROADMAP.md`](./ROADMAP.md). For manual testing scenarios
+and their results, see [`TESTING.md`](./TESTING.md).
 
 > **Note:** Only check an item once the fix is actually committed to the
 > codebase — not just discussed or planned.
@@ -22,8 +23,14 @@ approach it), see [`ROADMAP.md`](./ROADMAP.md).
 - [ ] Fix `gDownloadFile` append bug (`gdrive.py`) — delete pre-existing
       file before writing instead of using `"ab"` mode
       **[PATCHED, UNTESTED]**
+- [ ] Fix `cancelTask()` self-cancellation bug (`handler.py`) — `BOT.TASK.cancel()`
+      was called *before* the cleanup/notification steps, cancelling the very
+      coroutine it runs inside of and silently swallowing the failure message
+      to the user. Discovered while testing the `token.pickle` refresh item
+      below (see `TESTING.md` → Phase 1, Item 2). **[PATCHED, UNTESTED]**
 - [ ] Add `token.pickle` refresh logic when expired (`gdrive.py` →
-      `build_service`) **[PATCHED, PARTIAL TESTED]**
+      `build_service`) **[PATCHED, BLOCKED: retest waiting on `cancelTask()`
+      fix above — see `TESTING.md` for Scenarios 3–5]**
 - [ ] Remove unused `ProcessPoolExecutor()` in Mega branch (`manager.py`)
 - [ ] Filter out Google Docs/Sheets shortcuts before `gDownloadFile` call
       (`gdrive.py` → `gDownloadFolder`)
