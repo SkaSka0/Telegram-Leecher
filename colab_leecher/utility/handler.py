@@ -54,6 +54,12 @@ async def Leech(folder_path: str, remove: bool):
         
     files = [str(p) for p in pathlib.Path(folder_path).glob("**/*") if p.is_file()]
     for f in natsorted(files):
+        # Bail out early if the task was cancelled concurrently
+        # (e.g. via the Cancel button) instead of relying solely on
+        # CancelledError timing, since Paths.WORK_PATH may already
+        # have been removed by cancelTask().
+        if not BOT.State.task_going:
+            return
         file_path = ospath.join(folder_path, f)
 
         # Converting Video Files
@@ -64,9 +70,14 @@ async def Leech(folder_path: str, remove: bool):
 
     files = [str(p) for p in pathlib.Path(folder_path).glob("**/*") if p.is_file()]
     for f in natsorted(files):
+        if not BOT.State.task_going:
+            return
         file_path = ospath.join(folder_path, f)
 
         leech = await sizeChecker(file_path, remove)
+
+        if not BOT.State.task_going:
+            return
 
         if leech:
             if ospath.exists(file_path) and remove:
@@ -83,6 +94,8 @@ async def Leech(folder_path: str, remove: bool):
 
                 if BOT.Mode.mode == "local-mirror":
                     copied = copy_target(new_path, Paths.local_mirror_dir)
+                    if not BOT.State.task_going:
+                        return
                     Transfer.up_bytes.append(os.stat(copied).st_size)
                 else:
                     BotTimes.current_time = time()
@@ -97,7 +110,12 @@ async def Leech(folder_path: str, remove: bool):
                         )
                     except Exception as d:
                         logging.info(d)
+
+                    if not BOT.State.task_going:
+                        return
                     await upload_file(new_path, file_name)
+                    if not BOT.State.task_going:
+                        return
                     Transfer.up_bytes.append(os.stat(new_path).st_size)
 
                 count += 1
@@ -117,6 +135,8 @@ async def Leech(folder_path: str, remove: bool):
 
             if BOT.Mode.mode == "local-mirror":
                 copied = copy_target(new_path, Paths.local_mirror_dir)
+                if not BOT.State.task_going:
+                    return
                 Transfer.up_bytes.append(os.stat(copied).st_size)
             else:
                 BotTimes.current_time = time()
@@ -131,8 +151,13 @@ async def Leech(folder_path: str, remove: bool):
                     )
                 except Exception as d:
                     logging.error(f"Error updating status bar: {d}")
+                    
+                if not BOT.State.task_going:
+                    return
                 file_size = os.stat(new_path).st_size
                 await upload_file(new_path, file_name)
+                if not BOT.State.task_going:
+                    return
                 Transfer.up_bytes.append(file_size)
 
             if remove:
