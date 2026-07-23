@@ -4,30 +4,74 @@
 import io
 import logging
 import pickle
+
 from natsort import natsorted
 from re import search as re_search
 from os import makedirs, remove as osremove, path as ospath
 from urllib.parse import parse_qs, urlparse
+
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload
+
 from colab_leecher.utility.handler import cancelTask
 from colab_leecher.utility.helper import sizeUnit, getTime, speedETA, status_bar
 from colab_leecher.utility.variables import Gdrive, Messages, Paths, BotTimes, Transfer
 
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
 
-async def build_service():
+
+async def build_service() -> None:
+    """Builds the Google Drive API service client.
+
+    Loads credentials from Paths.access_token (token.pickle). If the
+    credentials are expired and a refresh token is available, they are
+    refreshed automatically and the updated token is persisted back to
+    disk so subsequent runs don't need to prompt the user again.
+
+    Cancels the current task via cancelTask() if the token file is
+    missing, in an outdated (pre-refresh-support) format, or if
+    refreshing fails (e.g. a revoked or invalid refresh token) —
+    instructing the user to regenerate token.pickle.
+    """
     global Gdrive
-    if ospath.exists(Paths.access_token):
-        with open(Paths.access_token, "rb") as token:
-            creds = pickle.load(token)
-            # Build the service
-            Gdrive.service = build("drive", "v3", credentials=creds)
-    else:
-        await cancelTask(
-            "token.pickle NOT FOUND ! Stop the Bot and Run the Google Drive Cell to Generate, then Try again !"
-        )
 
+    if not ospath.exists(Paths.access_token):
+        await cancelTask(
+            "token.pickle NOT FOUND ! Stop the Bot and Run the Google "
+            "Drive Cell to Generate, then Try again !"
+        )
+        return
+
+    with open(Paths.access_token, "rb") as token:
+        creds = pickle.load(token)
+
+    if not isinstance(creds, Credentials):
+        await cancelTask(
+            "token.pickle is in an outdated format that does not support "
+            "automatic refresh. Please regenerate it using the updated "
+            "Google Drive Authentication cell."
+        )
+        return
+
+    if creds.expired and creds.refresh_token:
+        try:
+            creds.refresh(Request())
+        except Exception as error:
+            logging.error(f"Failed to refresh Google Drive token: {error}")
+            await cancelTask(
+                "Google Drive token refresh failed (it may have been "
+                "revoked or expired beyond renewal). Please regenerate "
+                "token.pickle using the Google Drive Authentication cell."
+            )
+            return
+        else:
+            with open(Paths.access_token, "wb") as token_file:
+                pickle.dump(creds, token_file)
+            logging.info("Google Drive token refreshed and saved.")
+
+    Gdrive.service = build("drive", "v3", credentials=creds)
 
 async def g_DownLoad(link, num):
     global start_time, down_msg
