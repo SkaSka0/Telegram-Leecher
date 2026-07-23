@@ -18,32 +18,62 @@ confirmed it.
 - `Fail` — scenario did not behave as expected (see Notes)
 - `Blocked` — cannot currently be tested (see Notes for reason)
 
+## Testing Order
+
+Test in this order — Phase 1, Item 2 (`cancelTask()`) must be retested
+and confirmed **before** resuming Phase 1, Item 3 (`token.pickle`
+refresh) Scenarios 3–5, since those scenarios' expected behavior is
+reported entirely through `cancelTask()`.
+
+1. Phase 1, Item 2 — `cancelTask()` self-cancellation fix
+2. Phase 1, Item 3 — `token.pickle` refresh logic (Scenarios 3–5 retest)
+
 ---
 
-## Phase 1, Item 2 — `token.pickle` refresh logic (`gdrive.py` → `build_service`)
+## Phase 1, Item 2 — `cancelTask()` self-cancellation bug (`handler.py`)
 
-**Overall status:** In progress — Scenarios 1–2 passed; Scenarios 3–5 failed due
-to a `cancelTask()` bug, now patched and pending retest.
+**Overall status:** In progress — patch written, retest not yet performed.
+
+**Background:** Found while testing Phase 1, Item 3 (`token.pickle`
+refresh) Scenarios 3–5 below. `cancelTask()` called `BOT.TASK.cancel()`
+before deleting the status message and sending the failure notification.
+Since `BOT.TASK` is usually the same coroutine `cancelTask()` runs
+inside of, this injected a `CancelledError` at the next `await`
+checkpoint, silently aborting the cleanup/notification steps. The
+failure was invisible until the Colab cell was manually interrupted,
+at which point an unrelated-looking `asyncio.exceptions.CancelledError`
+traceback surfaced. See `ROADMAP.md` → Phase 1, Issue #2 for full
+reasoning.
+
+**Fix:** moved `BOT.TASK.cancel()` to the last line of `cancelTask()`,
+and wrapped the `MSG.status_msg.delete()` / `send_message()` calls in
+their own try/except blocks so a failure in one doesn't block the
+other.
+
+| # | Scenario | Result | Notes |
+|---|----------|--------|-------|
+| 1 | Trigger `cancelTask()` via Google Drive refresh_token invalid (re-run Item 3, Scenario 3) | Not started | Confirms `#TASK_STOPPED` message reaches OWNER chat without manually interrupting the cell. |
+| 2 | Trigger `cancelTask()` via Google Drive outdated token format (re-run Item 3, Scenario 4) | Not started | Same confirmation as above. |
+| 3 | Trigger `cancelTask()` via missing `token.pickle` (re-run Item 3, Scenario 5) | Not started | Same confirmation as above. |
+| 4 | Manual "Cancel ❌" button pressed mid-task | Not started | Regression check — confirm `"User Cancelled !"` message still sends correctly after the reordering. |
+| 5 | Trigger `cancelTask()` from a non-Google-Drive source (e.g. broken Terabox or aria2 link) | Not started | Confirms the fix isn't accidentally scoped only to the Google Drive path. |
+| 6 | Confirm `Paths.WORK_PATH` removal still happens in all of the above | Not started | Regression check on the `shutil.rmtree` cleanup step. |
+
+---
+
+## Phase 1, Item 3 — `token.pickle` refresh logic (`gdrive.py` → `build_service`)
+
+**Overall status:** In progress — Scenarios 1–2 passed; Scenarios 3–5 failed
+due to the `cancelTask()` bug above (now patched, pending its own retest
+first — see Testing Order above).
 
 | # | Scenario | Result | Notes |
 |---|----------|--------|-------|
 | 1 | Happy path — token valid, not expired | Pass | No refresh log line present, as expected. |
 | 2 | Token expired, refresh_token valid | Pass | `"Google Drive token refreshed and saved."` logged; `token.pickle` re-written with new `expiry` confirmed. |
-| 3 | Refresh_token revoked/invalid | Fail → Retest pending | Expected `cancelTask()` message never reached Telegram; traceback (`asyncio.exceptions.CancelledError`) only appeared after manually interrupting the cell. Root cause: `cancelTask()` called `BOT.TASK.cancel()` *before* sending the notification — cancelling itself mid-flight. Patched in `handler.py` (cancel moved to last step). **Needs retest.** |
-| 4 | `token.pickle` in old (oauth2client) format | Fail → Retest pending | Same root cause as Scenario 3 — "outdated format" message never sent before patch. **Needs retest.** |
-| 5 | `token.pickle` file missing | Fail → Retest pending | Same root cause as Scenario 3 — "NOT FOUND" message never sent before patch. **Needs retest.** |
-
-**Retest steps (after `cancelTask()` patch):**
-
-1. Repeat Scenarios 3, 4, and 5 exactly as before.
-2. Confirm the `#TASK_STOPPED` message reaches the OWNER chat on Telegram
-   *without* needing to manually interrupt the cell.
-3. Confirm `Paths.WORK_PATH` is removed after each run.
-4. Regression check: trigger the manual "Cancel ❌" button mid-task and
-   confirm the `"User Cancelled !"` message still sends correctly.
-5. Regression check: trigger `cancelTask()` from a non-Google-Drive
-   source (e.g. a broken Terabox or aria2 link) to confirm the fix
-   doesn't only work for the Google Drive path.
+| 3 | Refresh_token revoked/invalid | Fail → Blocked | Expected `cancelTask()` message never reached Telegram; traceback only appeared after manually interrupting the cell. Root cause identified as Phase 1, Item 2 above. **Retest after Item 2 is confirmed.** |
+| 4 | `token.pickle` in old (oauth2client) format | Fail → Blocked | Same root cause as Scenario 3. **Retest after Item 2 is confirmed.** |
+| 5 | `token.pickle` file missing | Fail → Blocked | Same root cause as Scenario 3. **Retest after Item 2 is confirmed.** |
 
 ---
 
@@ -60,13 +90,11 @@ _No scenarios logged yet. Suggested scenarios once testing begins:_
 
 ---
 
-## Bugs Found During Testing (not yet in PROGRESS.md / ROADMAP.md)
+## Bugs Found During Testing, Not Yet Promoted
 
 Use this section as a holding area for bugs discovered while testing an
-item above. Once confirmed, promote them to a proper entry in
-`PROGRESS.md` (and `ROADMAP.md` if reasoning/context is needed) before
-removing them from here.
+item above but not yet given an official entry in `PROGRESS.md` /
+`ROADMAP.md`.
 
-| Found while testing | Bug | Status | Notes |
-|----------------------|-----|--------|-------|
-| Phase 1, Item 2 (Scenarios 3–5) | `cancelTask()` in `handler.py` calls `BOT.TASK.cancel()` before the cleanup/notification steps run, so the coroutine is cancelled mid-flight and the user never receives the failure message | `[PATCHED, UNTESTED]` | Fix moves `.cancel()` to the very last line of `cancelTask()`; also wraps the delete/send steps in their own try/except so one failing doesn't block the other. Needs the retest steps above before checkboxing anywhere. |
+_None currently pending — the `cancelTask()` self-cancellation bug found
+here was promoted to Phase 1, Item 2 in `PROGRESS.md` and `ROADMAP.md`._
