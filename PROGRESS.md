@@ -21,6 +21,7 @@ approach it), see [`ROADMAP.md`](./ROADMAP.md).
 
 - [ ] Fix `gDownloadFile` append bug (`gdrive.py`) — delete pre-existing
       file before writing instead of using `"ab"` mode
+      **[PATCHED, UNTESTED]**
 - [ ] Add `token.pickle` refresh logic when expired (`gdrive.py` →
       `build_service`)
 - [ ] Remove unused `ProcessPoolExecutor()` in Mega branch (`manager.py`)
