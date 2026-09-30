@@ -29,6 +29,9 @@ import json
 import os
 import shutil
 import subprocess
+import re
+import importlib
+from importlib import metadata
 
 from IPython.display import clear_output
 
@@ -37,6 +40,13 @@ APPNAME = "TelegramLeecher"
 REPO_URL = "https://github.com/SkaSka0/Telegram-Leecher"
 REPO_NAME = "Telegram-Leecher"
 REQUIRED_SECRETS = ("API_ID", "API_HASH", "BOT_TOKEN", "USER_ID", "DUMP_ID")
+
+# Maps executable name -> apt package that provides it
+SYSTEM_TOOLS = {
+    "ffmpeg": "ffmpeg",
+    "aria2c": "aria2",
+    "megadl": "megatools",
+}
 
 target_branch = "main"  # @param ["colab-mirror", "main"]
 
@@ -71,6 +81,73 @@ def run_streamed(cmd, error_message=None):
     return proc.returncode
 
 # 📌 Steps
+def parse_requirements(path: str) -> list[str]:
+    """Extracts package names from a requirements.txt file.
+
+    Args:
+        path: Path to the requirements file.
+
+    Returns:
+        A list of bare package names (version specifiers, extras and
+        comments removed).
+    """
+    names = []
+    with open(path, "r") as file:
+        for line in file:
+            line = line.split("#")[0].strip()
+            if not line or line.startswith("-"):
+                continue
+            name = re.split(r"[<>=!~;\[\s]", line, maxsplit=1)[0]
+            if name:
+                names.append(name)
+    return names
+
+
+def check_dependencies() -> dict:
+    """Verifies that system tools and Python packages are installed.
+
+    Returns:
+        A dict with two lists: 'missing_tools' (executables not on PATH)
+        and 'missing_packages' (Python packages with no installed metadata).
+    """
+    importlib.invalidate_caches()
+
+    missing_tools = [
+        f"{tool} (apt: {pkg})"
+        for tool, pkg in SYSTEM_TOOLS.items()
+        if shutil.which(tool) is None
+    ]
+
+    missing_packages = []
+    req_path = f"/content/{REPO_NAME}/requirements.txt"
+    for name in parse_requirements(req_path):
+        try:
+            metadata.version(name)
+        except metadata.PackageNotFoundError:
+            missing_packages.append(name)
+
+    return {"missing_tools": missing_tools, "missing_packages": missing_packages}
+
+
+def report_dependency_status(status: dict) -> None:
+    """Logs a summary of the dependency check.
+
+    Args:
+        status: The dict returned by check_dependencies().
+    """
+    missing_tools = status["missing_tools"]
+    missing_packages = status["missing_packages"]
+
+    if not missing_tools and not missing_packages:
+        log("Dependency check: all dependencies installed successfully")
+        return
+
+    log("Dependency check: some dependencies failed to install", level="ERROR")
+    for item in missing_tools:
+        log(f"Missing system tool: {item}", level="ERROR")
+    for item in missing_packages:
+        log(f"Missing Python package: {item}", level="ERROR")
+
 def load_credentials():
     """Read + validate secrets from Colab, return a normalized dict."""
     from google.colab import userdata
@@ -168,18 +245,17 @@ def clear_old_session():
         log("Removing previous bot session file")
         os.remove(session_path)
 
+def prepare_launch(status: dict):
+    """Clears the cell output, reports dependency status, then announces launch.
 
-def prepare_launch():
-    """Run everything up to (but not including) starting the bot.
-
-    The bot itself is launched via the Colab `!` magic command at the
-    bottom of the cell, since that syntax only works at cell-level and
-    not inside a regular Python function.
+    Args:
+        status: The dict returned by check_dependencies().
     """
     clear_output()
+    report_dependency_status(status)
     log("Launching Telegram Leecher bot...")
 
-# 📌 Orchestration
+
 def main():
     creds = load_credentials()
     clean_sample_data()
@@ -187,9 +263,10 @@ def main():
     install_system_deps()
     install_megatools()
     install_python_deps()
+    status = check_dependencies()
     save_credentials(creds)
     clear_old_session()
-    prepare_launch()
+    prepare_launch(status)
 
 
 main()
