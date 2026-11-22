@@ -46,16 +46,6 @@ async def telegram_upload(client, message):
     src_request_msg = await task_starter(message, text)
 
 
-@colab_bot.on_message(filters.command("gdupload") & filters.private & owner_only)
-async def drive_upload(client, message):
-    global BOT, src_request_msg
-    BOT.Mode.mode = "mirror"
-    BOT.Mode.ytdl = False
-
-    text = "<b>⚡ Send Me DOWNLOAD LINK(s) 🔗»</b>\n\n🦀 Follow the below pattern\n\n<code>https//linktofile1.mp4\nhttps//linktofile2.mp4\n[Custom name space.mp4]\n{Password for zipping}\n(Password for unzip)</code>"
-
-    src_request_msg = await task_starter(message, text)
-
 @colab_bot.on_message(filters.command("lcupload") & filters.private & owner_only)
 async def local_cloud_upload(client, message):
     global BOT, src_request_msg
