@@ -130,6 +130,14 @@ async def handle_url(client, message):
             else:
                 break
 
+        unsupported = ("mega.nz", "terabox", "1024tera")
+        if any(d in link for link in temp_source for d in unsupported):
+            await message.reply_text(
+                "<i>Mega and Terabox links are not supported in the local version.</i>",
+                quote=True,
+            )
+            return
+
         BOT.SOURCE = temp_source
         keyboard = InlineKeyboardMarkup(
             [
