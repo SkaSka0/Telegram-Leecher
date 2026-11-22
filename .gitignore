@@ -9,3 +9,15 @@ testing_purpose/
 __pycache__/
 
 *.session
+
+# lokal
+credentials.json
+token.pickle
+client_secret.json
+.venv/
+
+# lokal
+credentials.json
+token.pickle
+client_secret.json
+.venv/
