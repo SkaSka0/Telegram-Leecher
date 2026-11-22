@@ -174,12 +174,7 @@ async def taskScheduler():
 
     BotTimes.current_time = time()
 
-    if BOT.Mode.mode != "mirror":
-        await Do_Leech(BOT.SOURCE, is_dir, BOT.Mode.ytdl, is_zip, is_unzip, is_dualzip)
-    elif BOT.Mode.mode == "local-mirror":
-        await Do_Local_Mirror(BOT.SOURCE, BOT.Mode.ytdl, is_zip, is_unzip, is_dualzip)
-    else:
-        await Do_Mirror(BOT.SOURCE, BOT.Mode.ytdl, is_zip, is_unzip, is_dualzip)
+    await Do_Leech(BOT.SOURCE, is_dir, BOT.Mode.ytdl, is_zip, is_unzip, is_dualzip)
 
 
 async def Do_Leech(source, is_dir, is_ytdl, is_zip, is_unzip, is_dualzip):
@@ -235,73 +230,3 @@ async def Do_Leech(source, is_dir, is_ytdl, is_zip, is_unzip, is_dualzip):
     await SendLogs(True)
 
 
-async def Do_Mirror(source, is_ytdl, is_zip, is_unzip, is_dualzip):
-    if not ospath.exists(Paths.MOUNTED_DRIVE):
-        await cancelTask(
-            "Google Drive is NOT MOUNTED ! Stop the Bot and Run the Google Drive Cell to Mount, then Try again !"
-        )
-        return
-
-    if not ospath.exists(Paths.mirror_dir):
-        makedirs(Paths.mirror_dir)
-
-    await downloadManager(source, is_ytdl)
-
-    Transfer.total_down_size = getSize(Paths.down_path)
-
-    applyCustomName()
-
-    cdt = datetime.now()
-    cdt_ = cdt.strftime("Uploaded » %Y-%m-%d %H:%M:%S")
-    mirror_dir_ = ospath.join(Paths.mirror_dir, cdt_)
-
-    if is_zip:
-        await Zip_Handler(Paths.down_path, True, True)
-        shutil.copytree(Paths.temp_zpath, mirror_dir_)
-    elif is_unzip:
-        await Unzip_Handler(Paths.down_path, True)
-        shutil.copytree(Paths.temp_unzip_path, mirror_dir_)
-    elif is_dualzip:
-        await Unzip_Handler(Paths.down_path, True)
-        await Zip_Handler(Paths.temp_unzip_path, True, True)
-        shutil.copytree(Paths.temp_zpath, mirror_dir_)
-    else:
-        shutil.copytree(Paths.down_path, mirror_dir_)
-
-    await SendLogs(False)
-
-async def Do_Local_Mirror(source, is_ytdl, is_zip, is_unzip, is_dualzip):
-    if not ospath.exists(Paths.local_mirror_dir):
-        makedirs(Paths.local_mirror_dir)
-
-    await downloadManager(source, is_ytdl)
-
-    Transfer.total_down_size = getSize(Paths.down_path)
-
-    applyCustomName()
-
-    cdt = datetime.now()
-    cdt_ = cdt.strftime("Uploaded_%Y-%m-%d_%H-%M-%S-%f")
-    local_dir_ = ospath.join(Paths.local_mirror_dir, cdt_)
-
-    if ospath.exists(local_dir_):
-        await cancelTask(f"Local destination already exists: {local_dir_}")
-        return
-
-    if ospath.exists(local_dir_):
-        shutil.rmtree(local_dir_)
-
-    if is_zip:
-        await Zip_Handler(Paths.down_path, True, True)
-        shutil.copytree(Paths.temp_zpath, local_dir_)
-    elif is_unzip:
-        await Unzip_Handler(Paths.down_path, True)
-        shutil.copytree(Paths.temp_unzip_path, local_dir_)
-    elif is_dualzip:
-        await Unzip_Handler(Paths.down_path, True)
-        await Zip_Handler(Paths.temp_unzip_path, True, True)
-        shutil.copytree(Paths.temp_zpath, local_dir_)
-    else:
-        shutil.copytree(Paths.down_path, local_dir_)
-
-    await SendLogs(False)
