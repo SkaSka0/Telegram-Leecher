@@ -46,7 +46,6 @@ colab_leecher/                   => Main bot package
 ├── downlader/                   => Downloader modules for various sources
 │   ├── aria2.py                 => Direct link downloader using aria2c
 │   ├── gdrive.py                => Google Drive file/folder downloader
-│   ├── mega.py                  => Mega.nz downloader via megadl
 │   ├── manager.py               => Router/manager for download types
 │   ├── telegram.py              => Downloader for files from Telegram messages
 │   ├── terabox.py               => Fetches Terabox direct link then downloads
@@ -100,7 +99,6 @@ colab_leecher/                   => Main bot package
 - Google Drive Link ( Auto Authenticate ) ✅
 - Telegram File Link ✅
 - Video Links ( YouTube and 2000 More Sites 😉 ) ✅
-- Mega.nz Link ✅
 - Torrent / Magnet Link ❌ ( Intentionally omitted 😔 )
 - GDTot, Sharer and Short Links ❌ ( Coming Soon ♨️)
 

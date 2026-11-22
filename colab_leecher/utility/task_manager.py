@@ -18,7 +18,6 @@ from colab_leecher.utility.helper import (
     is_google_drive,
     is_telegram,
     is_ytdl_link,
-    is_mega,
     is_terabox,
     is_torrent,
 )
@@ -105,8 +104,6 @@ async def taskScheduler():
                 ida = "🏮"
             elif is_terabox(link):
                 ida = "🍑"
-            elif is_mega(link):
-                ida = "💾"
             else:
                 ida = "🔗"
             code_link = f"\n\n{ida} <code>{link}</code>"

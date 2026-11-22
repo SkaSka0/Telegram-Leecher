@@ -46,9 +46,6 @@ def isLink(_, __, update):
 def is_google_drive(link):
     return "drive.google.com" in link
 
-def is_mega(link):
-    return "mega.nz" in link
-
 def is_terabox(link):
     return "terabox" in link or "1024tera" in link
 
@@ -95,21 +92,6 @@ def sizeUnit(size):
     else:
         siz = f"{size:.2f} B"
     return siz
-
-def to_bytes(value, unit):
-    unit = unit.lower()
-    if unit.startswith("pi"):
-        return value * 1024**5
-    elif unit.startswith("ti"):
-        return value * 1024**4
-    elif unit.startswith("gi"):
-        return value * 1024**3
-    elif unit.startswith("mi"):
-        return value * 1024**2
-    elif unit.startswith("ki"):
-        return value * 1024
-    else:
-        return value
 
 def fileType(file_path: str):
     extensions_dict = {
