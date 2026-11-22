@@ -3,7 +3,6 @@
 
 import os
 import json
-import GPUtil
 import shutil
 import logging
 import subprocess
@@ -58,7 +57,7 @@ async def videoConverter(file: str):
         return file  # Return if It's already mp4 / mkv file
 
     c, out_file, Err = 0, f"{name}.{BOT.Options.video_out}", False
-    gpu = len(GPUtil.getAvailable())
+    gpu = 1 if shutil.which("nvidia-smi") else 0
 
     quality = "-preset slow -qp 0" if BOT.Options.convert_quality else ""
 
