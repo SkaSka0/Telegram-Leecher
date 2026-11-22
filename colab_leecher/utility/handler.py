@@ -63,7 +63,7 @@ async def Leech(folder_path: str, remove: bool):
         file_path = ospath.join(folder_path, f)
 
         # Converting Video Files
-        if BOT.Options.convert_video and fileType(file_path) == "video":
+        if remove and BOT.Options.convert_video and fileType(file_path) == "video":
             file_path = await videoConverter(file_path)
 
         Transfer.total_down_size = getSize(folder_path)
