@@ -12,11 +12,12 @@ from .utility.task_manager import taskScheduler, task_starter
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from .utility.helper import isLink, setThumbnail, message_deleter, send_settings
 
+owner_only = filters.user(OWNER)
 
 src_request_msg = None
 
 
-@colab_bot.on_message(filters.command("start") & filters.private)
+@colab_bot.on_message(filters.command("start") & filters.private & owner_only)
 async def start(client, message):
     await message.delete()
     text = "**Hey There, 👋🏼 It's Colab Leecher**\n\n◲ I am a Powerful File Transloading Bot 🚀\n◲ I can Transfer Files To Telegram or Your Google Drive From Various Sources 🦐"
@@ -34,7 +35,7 @@ async def start(client, message):
     await message.reply_text(text, reply_markup=keyboard)
 
 
-@colab_bot.on_message(filters.command("tupload") & filters.private)
+@colab_bot.on_message(filters.command("tupload") & filters.private & owner_only)
 async def telegram_upload(client, message):
     global BOT, src_request_msg
     BOT.Mode.mode = "leech"
@@ -45,7 +46,7 @@ async def telegram_upload(client, message):
     src_request_msg = await task_starter(message, text)
 
 
-@colab_bot.on_message(filters.command("gdupload") & filters.private)
+@colab_bot.on_message(filters.command("gdupload") & filters.private & owner_only)
 async def drive_upload(client, message):
     global BOT, src_request_msg
     BOT.Mode.mode = "mirror"
@@ -55,7 +56,7 @@ async def drive_upload(client, message):
 
     src_request_msg = await task_starter(message, text)
 
-@colab_bot.on_message(filters.command("lcupload") & filters.private)
+@colab_bot.on_message(filters.command("lcupload") & filters.private & owner_only)
 async def local_cloud_upload(client, message):
     global BOT, src_request_msg
     BOT.Mode.mode = "local-mirror"
@@ -65,7 +66,7 @@ async def local_cloud_upload(client, message):
 
     src_request_msg = await task_starter(message, text)
 
-@colab_bot.on_message(filters.command("drupload") & filters.private)
+@colab_bot.on_message(filters.command("drupload") & filters.private & owner_only)
 async def directory_upload(client, message):
     global BOT, src_request_msg
     BOT.Mode.mode = "dir-leech"
@@ -76,7 +77,7 @@ async def directory_upload(client, message):
     src_request_msg = await task_starter(message, text)
 
 
-@colab_bot.on_message(filters.command("ytupload") & filters.private)
+@colab_bot.on_message(filters.command("ytupload") & filters.private & owner_only)
 async def yt_upload(client, message):
     global BOT, src_request_msg
     BOT.Mode.mode = "leech"
@@ -87,14 +88,14 @@ async def yt_upload(client, message):
     src_request_msg = await task_starter(message, text)
 
 
-@colab_bot.on_message(filters.command("settings") & filters.private)
+@colab_bot.on_message(filters.command("settings") & filters.private & owner_only)
 async def settings(client, message):
     if message.chat.id == OWNER:
         await message.delete()
         await send_settings(client, message, message.id, True)
 
 
-@colab_bot.on_message(filters.reply)
+@colab_bot.on_message(filters.reply & owner_only)
 async def setPrefix(client, message):
     global BOT, SETTING
     if BOT.State.prefix:
@@ -111,7 +112,7 @@ async def setPrefix(client, message):
         await message.delete()
 
 
-@colab_bot.on_message(filters.create(isLink) & ~filters.photo)
+@colab_bot.on_message(filters.create(isLink) & ~filters.photo & owner_only)
 async def handle_url(client, message):
     global BOT
 
@@ -162,7 +163,7 @@ async def handle_url(client, message):
         )
 
 
-@colab_bot.on_callback_query()
+@colab_bot.on_callback_query(owner_only)
 async def handle_options(client, callback_query):
     global BOT, MSG
 
@@ -364,7 +365,7 @@ async def handle_options(client, callback_query):
         await cancelTask("User Cancelled !")
 
 
-@colab_bot.on_message(filters.photo & filters.private)
+@colab_bot.on_message(filters.photo & filters.private & owner_only)
 async def handle_image(client, message):
     msg = await message.reply_text("<i>Trying To Save Thumbnail...</i>")
     success = await setThumbnail(message)
@@ -379,7 +380,7 @@ async def handle_image(client, message):
     await message_deleter(message, msg)
 
 
-@colab_bot.on_message(filters.command("setname") & filters.private)
+@colab_bot.on_message(filters.command("setname") & filters.private & owner_only)
 async def custom_name(client, message):
     global BOT
     if len(message.command) != 2:
@@ -397,7 +398,7 @@ async def custom_name(client, message):
     await message_deleter(message, msg)
 
 
-@colab_bot.on_message(filters.command("zipaswd") & filters.private)
+@colab_bot.on_message(filters.command("zipaswd") & filters.private & owner_only)
 async def zip_pswd(client, message):
     global BOT
     if len(message.command) != 2:
@@ -415,7 +416,7 @@ async def zip_pswd(client, message):
     await message_deleter(message, msg)
 
 
-@colab_bot.on_message(filters.command("unzipaswd") & filters.private)
+@colab_bot.on_message(filters.command("unzipaswd") & filters.private & owner_only)
 async def unzip_pswd(client, message):
     global BOT
     if len(message.command) != 2:
@@ -433,7 +434,7 @@ async def unzip_pswd(client, message):
     await message_deleter(message, msg)
 
 
-@colab_bot.on_message(filters.command("help") & filters.private)
+@colab_bot.on_message(filters.command("help") & filters.private & owner_only)
 async def help_command(client, message):
     msg = await message.reply_text(
         "Send /start To Check If I am alive 🤨\n\nSend /colabxr and follow prompts to start transloading 🚀\n\nSend /settings to edit bot settings ⚙️\n\nSend /setname To Set Custom File Name 📛\n\nSend /zipaswd To Set Password For Zip File 🔐\n\nSend /unzipaswd To Set Password to Extract Archives 🔓\n\n⚠️ **You can ALWAYS SEND an image To Set it as THUMBNAIL for your files 🌄**",
