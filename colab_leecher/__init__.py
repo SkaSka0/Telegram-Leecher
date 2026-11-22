@@ -1,11 +1,13 @@
 # copyright 2023 © Xron Trix | https://github.com/Xrontrix10
 
 import logging, json, asyncio
+from pathlib import Path
 from uvloop import install
 from pyrogram.client import Client
 
-# Read the dictionary from the txt file
-with open("/content/Telegram-Leecher/credentials.json", "r") as file:
+ROOT = Path(__file__).resolve().parent.parent
+
+with open(ROOT / "credentials.json", "r") as file:
     credentials = json.loads(file.read())
 
 API_ID = credentials["API_ID"]
@@ -24,4 +26,10 @@ try:
 except RuntimeError:
     asyncio.set_event_loop(asyncio.new_event_loop())
 
-colab_bot = Client("my_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
+colab_bot = Client(
+    "my_bot",
+    api_id=API_ID,
+    api_hash=API_HASH,
+    bot_token=BOT_TOKEN,
+    workdir=str(ROOT),
+)
