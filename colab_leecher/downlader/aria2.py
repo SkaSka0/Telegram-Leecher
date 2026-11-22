@@ -48,16 +48,19 @@ async def aria2_Download(link: str, num: int):
     error_output = proc.stderr.read()  # type: ignore
     if exit_code != 0:
         if exit_code == 3:
-            logging.error(f"The Resource was Not Found in {link}")
+            reason = "The resource was not found."
         elif exit_code == 9:
-            logging.error(f"Not enough disk space available")
+            reason = "Not enough disk space available."
+        elif exit_code == 19:
+            reason = "Name resolution failed."
+        elif exit_code == 22:
+            reason = "The server sent a bad or unexpected HTTP response (it may be blocking the connection)."
         elif exit_code == 24:
-            logging.error(f"HTTP authorization failed.")
+            reason = "HTTP authorization failed."
         else:
-            logging.error(
-                f"aria2c download failed with return code {exit_code} for {link}.\nError: {error_output}"
-            )
-
+            reason = f"aria2c exited with code {exit_code}."
+        logging.error(f"{reason} Link: {link}\nError: {error_output}")
+        raise RuntimeError(reason)
 
 def get_Aria2c_Name(link):
     if len(BOT.Options.custom_name) != 0:
