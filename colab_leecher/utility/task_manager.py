@@ -117,7 +117,7 @@ async def taskScheduler():
                 Messages.dump_task += code_link
 
     # Get the current date and time in the specified time zone
-    cdt = datetime.now(pytz.timezone("Asia/Kolkata"))
+    cdt = datetime.now(pytz.timezone("Asia/Jakarta"))
     dt = cdt.strftime(" %d-%m-%Y")
     Messages.dump_task += f"\n\n<b>📆 Task Date » </b><i>{dt}</i>"
 
@@ -136,6 +136,8 @@ async def taskScheduler():
         system(f"aria2c -d {Paths.WORK_PATH} -o Hero.jpg {Aria2c.pic_dwn_url}")
     except Exception:
         Paths.HERO_IMAGE = Paths.DEFAULT_HERO
+    if not ospath.exists(Paths.HERO_IMAGE):
+        shutil.copy(Paths.DEFAULT_HERO, Paths.HERO_IMAGE)
 
     MSG.sent_msg = await colab_bot.send_message(chat_id=DUMP_ID, text=src_text[0])
 
