@@ -18,7 +18,6 @@ from colab_leecher.utility.helper import (
     is_google_drive,
     is_telegram,
     is_ytdl_link,
-    is_terabox,
     is_torrent,
 )
 from colab_leecher.utility.handler import (
@@ -102,8 +101,6 @@ async def taskScheduler():
                 Messages.caution_msg = "\n\n⚠️<i><b> Torrents Are Strictly Prohibited in Google Colab</b>, Try to avoid Magnets !</i>"
             elif is_ytdl_link(link):
                 ida = "🏮"
-            elif is_terabox(link):
-                ida = "🍑"
             else:
                 ida = "🔗"
             code_link = f"\n\n{ida} <code>{link}</code>"

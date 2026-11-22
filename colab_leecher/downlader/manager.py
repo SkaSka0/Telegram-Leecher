@@ -6,7 +6,6 @@ from natsort import natsorted
 from datetime import datetime
 from asyncio import sleep, get_running_loop
 from colab_leecher.utility.handler import cancelTask
-from colab_leecher.downlader.terabox import terabox_download
 from colab_leecher.downlader.ytdl import YTDL_Status, get_YT_Name
 from colab_leecher.downlader.aria2 import aria2_Download, get_Aria2c_Name
 from colab_leecher.downlader.telegram import TelegramDownload, media_Identifier
@@ -24,7 +23,6 @@ from colab_leecher.utility.helper import (
     keyboard,
     sysINFO,
     is_google_drive,
-    is_terabox,
     is_ytdl_link,
     is_telegram,
 )
@@ -73,16 +71,6 @@ async def downloadManager(source, is_ytdl: bool):
                         pass
                     while not isYtdlComplete():
                         await sleep(2)
-                elif is_terabox(link):
-                    tera_dn = f"<b>PLEASE WAIT ⌛</b>\n\n__Generating Download Link For__\n\n<code>{link}</code>"
-                    try:
-                        await MSG.status_msg.edit_text(
-                            text=tera_dn + sysINFO(), reply_markup=keyboard()
-                        )
-                    except Exception as e1:
-                        print(f"Couldn't Update text ! Because: {e1}")
-
-                    await terabox_download(link, i + 1)
                 else:
                     aria2_dn = f"<b>PLEASE WAIT ⌛</b>\n\n__Getting Download Info For__\n\n<code>{link}</code>"
                     try:

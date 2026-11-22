@@ -46,9 +46,6 @@ def isLink(_, __, update):
 def is_google_drive(link):
     return "drive.google.com" in link
 
-def is_terabox(link):
-    return "terabox" in link or "1024tera" in link
-
 def is_ytdl_link(link):
     return "youtube.com" in link or "youtu.be" in link
 

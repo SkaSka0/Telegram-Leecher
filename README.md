@@ -48,7 +48,6 @@ colab_leecher/                   => Main bot package
 │   ├── gdrive.py                => Google Drive file/folder downloader
 │   ├── manager.py               => Router/manager for download types
 │   ├── telegram.py              => Downloader for files from Telegram messages
-│   ├── terabox.py               => Fetches Terabox direct link then downloads
 │   └── ytdl.py                  => YouTube/other sites downloader via yt-dlp
 ├── uploader/                    => Upload modules for downloaded results
 │   └── telegram.py              => Uploads files to Telegram
