@@ -3,8 +3,11 @@
 
 from time import time
 from datetime import datetime
+from pathlib import Path as _P
 from pyrogram.types import Message
 
+_ROOT = _P(__file__).resolve().parents[2]
+_DATA = _P.home() / ".local" / "share" / "telegram-leecher"
 
 class BOT:
     SOURCE = []
@@ -76,23 +79,22 @@ class BotTimes:
 
 
 class Paths:
-    WORK_PATH = "/content/Telegram-Leecher/BOT_WORK"
+    # PENTING: folder ini DIHAPUS (rmtree) setiap task baru dan saat cancel.
+    # Jangan arahkan ke folder yang berisi data penting, dan jangan di /tmp (RAM).
+    WORK_PATH = str(_DATA / "BOT_WORK")
     BASE_DOWN_PATH = f"{WORK_PATH}/Downloads"
-    THMB_PATH = "/content/Telegram-Leecher/colab_leecher/Thumbnail.jpg"
+    THMB_PATH = str(_ROOT / "colab_leecher" / "Thumbnail.jpg")
     VIDEO_FRAME = f"{WORK_PATH}/video_frame.jpg"
     HERO_IMAGE = f"{WORK_PATH}/Hero.jpg"
-    DEFAULT_HERO =  "/content/Telegram-Leecher/custom_thmb.jpg"
-    MOUNTED_DRIVE = "/content/drive"
+    DEFAULT_HERO = str(_ROOT / "custom_thmb.jpg")
     down_path = BASE_DOWN_PATH
     temp_dirleech_path = f"{WORK_PATH}/dir_leech_temp"
-    mirror_dir = "/content/drive/MyDrive/Colab Leecher Uploads"
-    local_mirror_dir = "/content/Colab Leecher Uploads"
+    local_mirror_dir = str(_P.home() / "Downloads" / "Leecher")
     temp_zpath = f"{WORK_PATH}/Leeched_Files"
     temp_unzip_path = f"{WORK_PATH}/Unzipped_Files"
     temp_files_dir = f"{WORK_PATH}/leech_temp"
     thumbnail_ytdl = f"{WORK_PATH}/ytdl_thumbnails"
-    access_token = "/content/token.pickle"
-
+    access_token = str(_DATA / "token.pickle")
 
 class Messages:
     caution_msg = "\n\n<i>💖 When I'm Doin This, Do Something Else ! <b>Because, Time Is Precious ✨</b></i>"
