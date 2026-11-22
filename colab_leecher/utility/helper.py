@@ -26,13 +26,17 @@ from colab_leecher.utility.variables import (
 
 def isLink(_, __, update):
     if update.text:
-        if "/content/" in str(update.text) or "/home" in str(update.text):
+        lines = update.text.strip().splitlines()
+        if not lines:
+            return False
+        first = lines[0].strip()
+
+        if ospath.isabs(first) and ospath.exists(first):
             return True
-        elif update.text.startswith("magnet:?xt=urn:btih:"):
+        if first.startswith("magnet:?xt=urn:btih:"):
             return True
 
-        parsed = urlparse(update.text)
-
+        parsed = urlparse(first)
         if parsed.scheme in ("http", "https") and parsed.netloc:
             return True
 
