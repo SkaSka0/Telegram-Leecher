@@ -8,7 +8,7 @@ from asyncio import sleep, get_running_loop
 from colab_leecher.utility.handler import cancelTask
 from colab_leecher.downlader.ytdl import YTDL_Status, get_YT_Name
 from colab_leecher.downlader.aria2 import aria2_Download, get_Aria2c_Name
-from colab_leecher.downlader.telegram import TelegramDownload, media_Identifier
+from colab_leecher.downlader.telegram import TelegramDownload, media_Identifier, media_Name
 from colab_leecher.utility.variables import (
     BOT,
     Gdrive,
@@ -130,8 +130,8 @@ async def get_d_name(link: str):
         meta = getFileMetadata(id)
         Messages.download_name = meta["name"]
     elif is_telegram(link):
-        media, _ = await media_Identifier(link)
-        Messages.download_name = media.file_name if hasattr(media, "file_name") else "None"  # type: ignore
+        media, message = await media_Identifier(link)
+        Messages.download_name = media_Name(media, message)
     elif is_ytdl_link(link):
         Messages.download_name = await get_YT_Name(link)
     else:

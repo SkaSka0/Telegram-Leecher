@@ -38,6 +38,32 @@ async def media_Identifier(link):
     return media, message
 
 
+def media_Name(media, message) -> str:
+    """Return the file name of a Telegram media object.
+
+    Photos, voice notes, video notes and some videos carry no file name,
+    so build one from the media type and its unique id instead of
+    returning None.
+    """
+    name = getattr(media, "file_name", None)
+    if name:
+        return name
+
+    default_ext = {
+        "photo": ".jpg",
+        "video": ".mp4",
+        "audio": ".mp3",
+        "voice": ".ogg",
+        "video_note": ".mp4",
+        "animation": ".mp4",
+        "sticker": ".webp",
+    }
+    kind = next(
+        (k for k in default_ext if getattr(message, k, None) is not None), "file"
+    )
+    return f"{kind}_{media.file_unique_id}{default_ext.get(kind, '')}"
+
+
 async def download_progress(current, total):
     speed_string, eta, percentage = speedETA(start_time, current, total)
 
@@ -56,8 +82,7 @@ async def TelegramDownload(link, num):
     global start_time, TRANSFER_INFO
     media, message = await media_Identifier(link) # type: ignore
     if media is not None:
-        name = media.file_name if hasattr(  # type: ignore
-            media, "file_name") else "None"
+        name = media_Name(media, message)
     else:
         logging.error("Couldn't Download Telegram Message")
         await cancelTask("Couldn't Download Telegram Message")
