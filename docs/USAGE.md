@@ -69,4 +69,4 @@ Setiap kali Anda mengirim link, bot **mengosongkan** nama kustom dan kedua passw
 - Potongan hasil split video tidak persis seukuran batas, karena pemotongan `-c copy` hanya bisa jatuh di keyframe.
 - `/drupload` mode Regular tidak mengonversi video; file asli di folder Anda tidak disentuh.
 - Arsip hasil Compress berisi folder dengan nama file di dalamnya (misalnya `a.txt/a.txt`); itu bawaan cara bot mengarsipkan.
-- Saat ini, jika salah satu link dalam satu task gagal, **seluruh task dibatalkan** dan file link yang sudah selesai ikut terhapus. Ini akan diubah oleh [PLAN-BATCH-RESILIENCE.md](PLAN-BATCH-RESILIENCE.md).
+- Saat ini, jika salah satu link dalam satu task gagal, **seluruh task dibatalkan** dan file link yang sudah selesai ikut terhapus. Ini akan diubah oleh [plans/batch-resilience.md](plans/batch-resilience.md).

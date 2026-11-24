@@ -33,9 +33,9 @@ Prosedur lengkap tiap uji ada di [TESTING.md](TESTING.md).
 ## Langkah berikutnya (berurutan)
 
 1. Selesaikan uji **7.8**, **7.9**, **7.10**.
-2. Kerjakan [PLAN-BATCH-RESILIENCE.md](PLAN-BATCH-RESILIENCE.md): satu link gagal atau tidak valid tidak boleh menghentikan seluruh batch.
+2. Kerjakan [plans/batch-resilience.md](plans/batch-resilience.md): satu link gagal atau tidak valid tidak boleh menghentikan seluruh batch.
 3. Rapikan sisa: hapus `main.py`, perbarui `README.md` utama ke cara pakai lokal, tautkan folder `docs/`.
-4. Pilih pekerjaan dari [BACKLOG.md](BACKLOG.md).
+4. Pilih pekerjaan dari [ISSUES.md](ISSUES.md).
 5. Opsional: [GDRIVE.md](GDRIVE.md) dan layanan systemd.
 
 ## Log keputusan

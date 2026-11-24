@@ -13,8 +13,8 @@ Dokumentasi untuk menjalankan Telegram Leecher di PC Arch Linux (bukan Google Co
 | [USAGE.md](USAGE.md) | Cara memakai bot: perintah, nama file kustom, perilaku normal | Pemakaian sehari-hari |
 | [TROUBLESHOOTING.md](TROUBLESHOOTING.md) | Gejala dan solusinya | Ada error |
 | [GDRIVE.md](GDRIVE.md) | Token Google Drive (ditunda) | Kalau butuh download dari Drive |
-| [PLAN-BATCH-RESILIENCE.md](PLAN-BATCH-RESILIENCE.md) | Rencana: satu link gagal tidak menghentikan batch | Sebelum mengerjakan fitur itu |
-| [BACKLOG.md](BACKLOG.md) | Perbaikan lain yang belum dikerjakan | Memilih pekerjaan berikutnya |
+| [ISSUES.md](ISSUES.md) | Daftar bug dan fitur (BUG, FEAT, CHORE, SEC, TEST) dengan status | Memilih pekerjaan berikutnya |
+| [plans/batch-resilience.md](plans/batch-resilience.md) | Rencana: satu link gagal tidak menghentikan batch | Sebelum mengerjakan BUG-001 |
 
 ## Konvensi
 
