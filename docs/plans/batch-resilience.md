@@ -1,7 +1,8 @@
 # Rencana: Satu Link Gagal Tidak Menghentikan Batch
 
 **Status:** rencana, belum dikerjakan.
-**Prasyarat:** uji 7.8, 7.9, dan 7.10 di [TESTING.md](TESTING.md) selesai, dan `git status --short` bersih.
+**Pelacak:** [BUG-001 di ISSUES.md](../ISSUES.md)
+**Prasyarat:** uji 7.8, 7.9, dan 7.10 di [TESTING.md](../TESTING.md) selesai, dan `git status --short` bersih.
 
 ## Masalah
 
@@ -167,7 +168,7 @@ Setiap langkah diuji sebelum commit berikutnya, mulai dari langkah 1 sampai 3 (t
 
 ## Matriks uji
 
-Gunakan server HTTP lokal dari [TESTING.md](TESTING.md) dengan `a.txt`, `b.txt`, dan satu link yang sengaja 404 (`http://127.0.0.1:8000/tidak-ada.txt`).
+Gunakan server HTTP lokal dari [TESTING.md](../TESTING.md) dengan `a.txt`, `b.txt`, dan satu link yang sengaja 404 (`http://127.0.0.1:8000/tidak-ada.txt`).
 
 | # | Input | Hasil yang benar |
 |---|---|---|
