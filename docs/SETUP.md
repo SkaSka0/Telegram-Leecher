@@ -85,14 +85,16 @@ git commit -m "chore: ignore local secrets and virtualenv" -m "Add credentials.j
 Pastikan runtime Colab lama sudah dihentikan (dua instance dengan token sama saling berebut update).
 
 ```fish
-printf '#!/usr/bin/env bash\ncd "$(dirname "$0")"\nexec .venv/bin/python -m colab_leecher\n' > run.sh
+printf '#!/usr/bin/env bash\ncd "$(dirname "$0")"\nif [ "$1" = "--version" ] || [ "$1" = "-V" ]; then\n    exec .venv/bin/python colab_leecher/_version.py\nfi\nexec .venv/bin/python -m colab_leecher\n' > run.sh
 chmod +x run.sh
 git add run.sh
-git commit -m "build: add run script for the local environment" -m "Replace the Colab launcher with a small script that changes into the repository root and starts the bot with the virtualenv's Python, so my_bot.session is created next to the code and no manual activation is needed."
+git commit -m "build: add run script for the local environment" -m "Replace the Colab launcher with a small script that changes into the repository root and starts the bot with the virtualenv's Python, so my_bot.session is created next to the code and no manual activation is needed. Support --version, which prints the bot version without starting the bot."
 ./run.sh
 ```
 
-Log yang sehat berisi `Colab Leecher Started !` dan `Started 16 HandlerTasks` (16 adalah worker dispatcher Pyrogram, bukan jumlah handler kita). Uji dari akun owner: `/start`, `/settings`, `/help`. Dari akun lain, bot **tidak boleh membalas sama sekali**.
+Opsi `./run.sh --version` mencetak versi tanpa menjalankan bot dan tanpa butuh `credentials.json`; opsi ini bekerja setelah `colab_leecher/_version.py` ada (mulai versi 0.1.1, lihat [VERSIONING.md](VERSIONING.md)). Bila belum ada, lewati dulu.
+
+Log yang sehat berisi `Colab Leecher Started !` (diikuti nomor versi mulai 0.1.1) dan `Started 16 HandlerTasks` (16 adalah worker dispatcher Pyrogram, bukan jumlah handler kita). Uji dari akun owner: `/start`, `/settings`, `/help`, dan `/version` (mulai 0.1.1). Dari akun lain, bot **tidak boleh membalas sama sekali**.
 
 ## Langkah 5: Service systemd (opsional)
 
