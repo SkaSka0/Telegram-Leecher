@@ -10,6 +10,12 @@ Rencana, belum dikerjakan (lihat [PLAN-BATCH-RESILIENCE.md](PLAN-BATCH-RESILIENC
 - File parsial dari link yang gagal dibersihkan.
 - Nama kustom hanya diterapkan bila hasil unduhan satu file.
 
+## [0.1.2] - 2026-11-25
+
+### Dihapus
+
+- `main.py`, launcher notebook Colab. Digantikan `run.sh`; `README.md` tidak lagi merujuknya.
+
 ## [0.1.1] - 2026-11-25
 
 ### Ditambahkan

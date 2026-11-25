@@ -13,7 +13,7 @@ from functools import lru_cache
 from importlib import metadata
 from pathlib import Path
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 APP_NAME = "Telegram Leecher (lokal)"
 UPSTREAM = "https://github.com/XronTrix10/Telegram-Leecher"
