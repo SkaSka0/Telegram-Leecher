@@ -17,11 +17,7 @@ Siapkan lima nilai: `API_ID`, `API_HASH` (dari https://my.telegram.org), `BOT_TO
 
 ## Langkah 1: Paket sistem
 
-```fish
-sudo pacman -S --needed aria2 ffmpeg zip 7zip unrar base-devel git uv
-sudo pacman -S --needed deno        # opsional, untuk YouTube (atau nodejs)
-timedatectl set-ntp true
-```
+Daftar lengkap paket wajib dan opsional, beserta fungsi tiap paket, ada di [DEPENDENCIES.md](DEPENDENCIES.md). Pasang paket wajib dari sana (satu perintah `pacman`), atur sinkronisasi jam (`timedatectl set-ntp true`, dijelaskan di berkas yang sama), lalu jalankan loop verifikasinya sampai tidak ada baris `MISSING`.
 
 ## Langkah 2: Clone, venv, dependency
 
