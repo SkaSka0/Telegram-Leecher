@@ -11,6 +11,7 @@ from .utility.variables import BOT, MSG, BotTimes, Paths
 from .utility.task_manager import taskScheduler, task_starter
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from .utility.helper import isLink, setThumbnail, message_deleter, send_settings
+from ._version import __version__, details, version_text
 
 owner_only = filters.user(OWNER)
 
@@ -20,7 +21,7 @@ src_request_msg = None
 @colab_bot.on_message(filters.command("start") & filters.private & owner_only)
 async def start(client, message):
     await message.delete()
-    text = "**Hey There, 👋🏼 It's Colab Leecher**\n\n◲ I am a Powerful File Transloading Bot 🚀\n◲ I can Transfer Files To Telegram or Your Google Drive From Various Sources 🦐"
+    text = "**Hey There, 👋🏼 It's Colab Leecher**\n\n◲ I am a Powerful File Transloading Bot 🚀\n◲ I can Transfer Files To Telegram or Your Google Drive From Various Sources 🦐\n\n◲ Version: <code>v" + __version__ + "</code>"
     keyboard = InlineKeyboardMarkup(
         [
             [
@@ -33,6 +34,11 @@ async def start(client, message):
         ]
     )
     await message.reply_text(text, reply_markup=keyboard)
+
+
+@colab_bot.on_message(filters.command("version") & filters.private & owner_only)
+async def version(client, message):
+    await message.reply_text(f"<code>{details()}</code>", quote=True)
 
 
 @colab_bot.on_message(filters.command("tupload") & filters.private & owner_only)
@@ -462,5 +468,5 @@ async def help_command(client, message):
     await message_deleter(message, msg)
 
 
-logging.info("Colab Leecher Started !")
+logging.info(f"Colab Leecher Started ! {version_text()}")
 colab_bot.run()
