@@ -10,6 +10,16 @@ Rencana, belum dikerjakan (lihat [PLAN-BATCH-RESILIENCE.md](PLAN-BATCH-RESILIENC
 - File parsial dari link yang gagal dibersihkan.
 - Nama kustom hanya diterapkan bila hasil unduhan satu file.
 
+## [0.1.1] - 2026-11-25
+
+### Ditambahkan
+
+- `colab_leecher/_version.py`: satu sumber untuk nomor versi dan metadata build (hasil `git describe`, versi Python, `pyrofork`, `yt-dlp`).
+- Perintah `/version` yang menampilkan metadata tersebut.
+- Baris versi pada balasan `/start` dan pada log saat bot mulai.
+- `./run.sh --version` untuk melihat versi tanpa menjalankan bot.
+- Dokumen `DEPENDENCIES.md` (daftar paket sistem Arch Linux) dan `VERSIONING.md`.
+
 ## [0.1.0] - 2026-11-25
 
 Versi pertama fork lokal (Arch Linux), diturunkan dari versi Colab. Patch kode 4.1 sampai 4.15; uji fitur 7.1 sampai 7.7 lolos.

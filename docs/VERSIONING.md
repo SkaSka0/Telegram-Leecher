@@ -22,38 +22,48 @@ Aturan tambahan:
 1. Pastikan `git status --short` kosong dan uji yang relevan lolos.
 2. Tentukan angka baru dari tabel di atas.
 3. Di [CHANGELOG.md](CHANGELOG.md), pindahkan isi `[Belum dirilis]` ke bagian baru `## [X.Y.Z] - TAHUN-BULAN-TANGGAL`.
-4. Perbarui nomor versi di sumbernya (lihat bagian "Sumber nomor versi").
+4. Ubah `__version__` di `colab_leecher/_version.py` (lihat "Sumber nomor versi").
 5. Commit dan beri tag:
 
 ```fish
-git add docs/CHANGELOG.md
+git add docs/CHANGELOG.md colab_leecher/_version.py
 git commit -m "chore(release): v0.2.0" -m "Move the unreleased entries to 0.2.0 in the changelog."
 git tag -a v0.2.0 -m "v0.2.0"
 ```
 
-Tambahkan file lain yang berubah (misalnya `colab_leecher/__init__.py`) ke `git add` yang sama. Bila branch sudah di-push, kirim tag juga: `git push origin lokal --tags`.
+Sertakan `colab_leecher/_version.py` di `git add` yang sama. Bila branch sudah di-push, kirim tag juga: `git push origin lokal --tags`.
 
 ## Sumber nomor versi
 
-Satu-satunya sumber kebenaran sebaiknya satu konstanta di kode:
+Nomor versi hanya ditulis di **satu tempat**: `colab_leecher/_version.py`.
 
 ```python
-# colab_leecher/__init__.py
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 ```
 
-**Status:** belum dipasang di kode; saat ini nomor versi baru tercatat di dokumen dan tag git. Langkah yang disarankan (dikerjakan sebagai rilis PATCH berikutnya):
+Berkas ini sengaja tidak meng-import apa pun dari paket lain, sehingga bisa dibaca tanpa `credentials.json`. Semua yang lain (pesan `/start`, `/version`, log startup, `run.sh --version`) mengambil dari sini. Jangan menulis nomor versi di tempat lain selain [CHANGELOG.md](CHANGELOG.md) dan tag git.
 
-1. Tambahkan `__version__` di atas, dekat `ROOT`.
-2. Tampilkan di `/start`, misalnya `Colab Leecher v0.1.0`, memakai `from colab_leecher import __version__` di `__main__.py`.
-3. Catat di CHANGELOG di bawah `Ditambahkan`.
+## Cara melihat versi
 
-Commit yang disarankan:
+| Cara | Hasil |
+|---|---|
+| `./run.sh --version` | Versi dan build, tanpa menjalankan bot dan tanpa butuh `credentials.json` |
+| `/version` di Telegram | Versi, build, versi Python, `pyrofork`, `yt-dlp`, lisensi, upstream |
+| `/start` di Telegram | Baris versi di bawah deskripsi bot |
+| Log saat bot start | `Colab Leecher Started ! Telegram Leecher (lokal) v0.1.1 (...)` |
+| `git describe --tags --always --dirty` | Posisi kode terhadap tag terakhir |
 
-```fish
-git add colab_leecher/__init__.py colab_leecher/__main__.py docs/CHANGELOG.md
-git commit -m "feat(version): expose the bot version in /start" -m "Add __version__ to the package and show it in the /start reply so the running version can be checked from Telegram."
-```
+Arti **build** (hasil `git describe`):
+
+| Contoh | Arti |
+|---|---|
+| `v0.1.1` | Tepat di tag rilis |
+| `v0.1.1-3-g1a2b3c4` | Tiga commit setelah `v0.1.1`, commit `1a2b3c4` |
+| `v0.1.1-3-g1a2b3c4-dirty` | Sama, tetapi ada perubahan yang belum di-commit |
+| `1a2b3c4` | Belum ada tag sama sekali |
+| `unknown (no git)` | Folder dijalankan tanpa repo git |
+
+Bila build menunjukkan `-dirty` atau commit setelah tag, kode yang berjalan **bukan** rilis resmi.
 
 ## Format pesan commit dan changelog
 
