@@ -132,7 +132,7 @@ Pelacak tunggal untuk **bug**, **fitur**, dan **perbaikan** yang sudah teridenti
 ### CHORE-003 · Perbarui `README.md` utama ke cara pakai lokal
 - Status: ide
 - Prioritas: sedang
-- Detail: tulis instalasi, `run.sh`, dan daftar fitur final; tautkan folder `docs/` ([docs/README.md](README.md)). Hapus bagian Colab (tombol notebook, peringatan kebijakan Colab) dan daftar struktur kode yang masih menyebut `main.py`.
+- Detail: Hapus bagian Colab (tombol notebook, peringatan kebijakan Colab) dan perbarui daftar struktur kode (tambahkan `run.sh`, `_version.py`, dan `docs/`).
 
 ### CHORE-004 · Hapus sisa teks Colab di bot
 - Status: ide
@@ -152,4 +152,6 @@ Pelacak tunggal untuk **bug**, **fitur**, dan **perbaikan** yang sudah teridenti
 
 ## Selesai
 
-_(belum ada. Format: `ID · judul · hash commit`)_
+_(Format: `ID · judul · hash commit`)_
+
+- CHORE-001 · Hapus `main.py` (launcher Colab) · 59d6464

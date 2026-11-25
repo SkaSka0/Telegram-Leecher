@@ -1,6 +1,6 @@
 # Progress
 
-Terakhir diperbarui: 24 November 2026
+Terakhir diperbarui: 25 November 2026
 Branch kerja: `lokal`
 
 ## Status
@@ -34,7 +34,7 @@ Prosedur lengkap tiap uji ada di [TESTING.md](TESTING.md).
 
 1. Selesaikan uji **7.8**, **7.9**, **7.10**.
 2. Kerjakan [plans/batch-resilience.md](plans/batch-resilience.md): satu link gagal atau tidak valid tidak boleh menghentikan seluruh batch.
-3. Rapikan sisa: hapus `main.py`, perbarui `README.md` utama ke cara pakai lokal, tautkan folder `docs/`.
+3. Rapikan sisa: perbarui README.md utama ke cara pakai lokal dan tautkan folder docs/ (CHORE-003).
 4. Pilih pekerjaan dari [ISSUES.md](ISSUES.md).
 5. Opsional: [GDRIVE.md](GDRIVE.md) dan layanan systemd.
 
@@ -51,6 +51,7 @@ Prosedur lengkap tiap uji ada di [TESTING.md](TESTING.md).
 | Kegagalan aria2c membatalkan seluruh task (patch 4.14) | Lebih baik dari melaporkan "selesai" dengan 0 file. **Akan diubah** menjadi per-link oleh rencana batch |
 | `/drupload` mode Regular tidak mengonversi video (patch 4.7) | Melindungi file asli di folder pengguna |
 | Shell fish, pesan commit berbahasa Inggris, satu commit per langkah | Preferensi kerja |
+| `main.py` (launcher Colab) dihapus | Digantikan `run.sh`; tidak ada kode yang mengimpornya |
 
 ## Riwayat commit (urutan)
 

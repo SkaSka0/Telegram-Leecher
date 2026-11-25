@@ -13,13 +13,12 @@ Catatan lengkap semua patch (4.1 sampai 4.15) yang dibutuhkan agar bot berjalan 
 | 4.7 | `colab_leecher/utility/handler.py` | Konversi video tidak menghapus file asli |
 | 4.8 | `colab_leecher/utility/task_manager.py` | Timezone, fallback hero, satu jalur `Do_Leech` |
 | 4.9 | `colab_leecher/downlader/ytdl.py` | Opsi yt-dlp yang benar |
+| 4.10 | `main.py` | Hapus launcher Colab |
 | 4.11 | beberapa berkas | Hapus integrasi Mega |
 | 4.12 | beberapa berkas | Hapus integrasi Terabox |
 | 4.13 | `colab_leecher/__main__.py` | Tolak link Mega/Terabox di awal |
 | 4.14 | `colab_leecher/downlader/aria2.py` | Task dibatalkan saat aria2c gagal |
 | 4.15 | `downlader/telegram.py`, `manager.py` | Nama file media Telegram tanpa `file_name` |
-
-(Nomor 4.10 sengaja kosong: penghapusan `main.py` masih opsional, lihat bagian akhir.)
 
 ### 4.1 `colab_leecher/__init__.py`
 
@@ -258,6 +257,25 @@ git add colab_leecher/downlader/ytdl.py
 git commit -m "fix(ytdl): use the correct yt-dlp option for concurrent fragments" -m "The key '--concurrent-fragments' is a CLI flag and was silently ignored by the Python API. Use concurrent_fragment_downloads instead."
 ```
 
+### 4.10 Buang launcher Colab (`main.py`)
+
+`main.py` adalah sel notebook Colab: membaca Colab Secrets, meng-clone repo, memasang dependensi lewat `apt`, lalu menjalankan bot. Di lokal sudah digantikan `run.sh`, dan tidak ada kode lain yang mengimpornya.
+
+```fish
+git rm main.py
+sed -i '/^main\.py .*Colab launcher/d' README.md
+sed -i '/copy-paste the code from/d' README.md
+grep -rnI --exclude-dir=.venv --exclude-dir=.git 'main\.py' .
+```
+
+Hasil yang benar: `README.md` dan kode tidak lagi menyebut `main.py`; hanya dokumen riwayat di `docs/`.
+
+```fish
+git add README.md
+git commit -m "chore: remove the Colab launcher" -m "main.py was the Colab notebook cell that read Colab Secrets, cloned the repository and installed dependencies with apt. run.sh replaces it locally and nothing imports it. Drop it together with the README lines that pointed to it."
+```
+
+
 ### 4.11 Buang integrasi Mega
 
 ```fish
@@ -408,5 +426,5 @@ git commit -m "fix(telegram): build a file name for media without one" -m "Photo
 
 ### Belum dikerjakan (opsional)
 
-- Hapus `main.py` (launcher Colab, sudah digantikan `run.sh`) dan `google_auth.py` (diganti saat [GDRIVE.md](GDRIVE.md) dikerjakan): `git rm main.py` lalu commit `chore: remove the Colab launcher`.
+- Hapus `google_auth.py` (versi Colab; diganti `gdrive_token.py` saat [GDRIVE.md](GDRIVE.md) dikerjakan).
 - Perbarui `README.md` ke cara pakai lokal (instalasi, `run.sh`, daftar fitur final).
