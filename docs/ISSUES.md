@@ -140,6 +140,14 @@ Pelacak tunggal untuk **bug**, **fitur**, dan **perbaikan** yang sudah teridenti
 - Area: `utility/helper.py` (`sysINFO`), `utility/handler.py` (`SendLogs`, `cancelTask`), `__main__.py` (`/start`, `/help`)
 - Detail: label "Colab Usage" di status bot, tombol repo/channel asli, dan teks `/help` yang menyebut `/colabxr`.
 
+
+### FEAT-007 · Pindahkan konfigurasi dari `credentials.json` ke `.env`
+- Status: direncanakan
+- Prioritas: sedang
+- Area: `colab_leecher/__init__.py`, `requirements.txt`, `.gitignore`, `.env.example` (baru), `docs/SETUP.md`, `docs/DEPENDENCIES.md`
+- Detail: konfigurasi dibaca dari environment (`API_ID`, `API_HASH`, `BOT_TOKEN`, `USER_ID`, `DUMP_ID`) lewat `python-dotenv`. Loader mengubah `API_ID`, `USER_ID`, `DUMP_ID` menjadi `int`, memvalidasi awalan `-100` pada `DUMP_ID`, dan gagal dengan pesan jelas bila ada nilai kosong. `credentials.json` tetap diterima sebagai cadangan selama satu rilis lalu dihapus. Manfaat: TEST-004 tidak butuh `credentials.json` palsu, dan layanan systemd (FEAT-003) bisa memakai `EnvironmentFile=`. Bukan perbaikan keamanan, karena kedua format sama-sama berkas teks yang di-gitignore.
+- Catatan: `.env` ditambahkan ke `.gitignore`, `.env.example` berisi placeholder dan di-commit. `my_bot.session` tetap rahasia dan sudah di-gitignore. `_version.py` tidak boleh mengimpor apa pun dari paket, supaya `./run.sh --version` tetap jalan tanpa konfigurasi.
+- Prasyarat: TEST-001, TEST-002, TEST-003 selesai. Rilis tersendiri (MINOR), jangan digabung dengan batch resilience (0.2.0).
 ---
 
 ## Selesai
