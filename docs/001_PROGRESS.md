@@ -8,7 +8,7 @@ Branch kerja: `lokal`
 | Area | Status |
 |---|---|
 | Setup (kredensial, paket, venv, dependency) | ✅ Selesai |
-| Patch kode 4.1 sampai 4.15 | ✅ Selesai ([010_PATCHES.md](010_PATCHES.md)) |
+| Patch kode 4.1 sampai 4.17 | ✅ Selesai ([010_PATCHES.md](010_PATCHES.md)) |
 | Bot berjalan lokal, filter owner terbukti menolak akun lain | ✅ Selesai |
 | Token Google Drive | ⏸ Ditunda ([011_GDRIVE.md](011_GDRIVE.md)) |
 | Layanan systemd | ⬜ Opsional |

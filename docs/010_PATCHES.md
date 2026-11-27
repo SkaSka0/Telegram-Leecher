@@ -1,6 +1,6 @@
 # Perubahan Kode dari Versi Colab
 
-Catatan lengkap semua patch (4.1 sampai 4.15) yang dibutuhkan agar bot berjalan di Arch Linux, dengan kode, perintah, dan pesan commit. Semua pesan commit berbahasa Inggris, **satu commit per langkah**, dan selalu `git add <file-spesifik>` (jangan `git add .`).
+Catatan lengkap semua patch (4.1 sampai 4.17) yang dibutuhkan agar bot berjalan di Arch Linux, dengan kode, perintah, dan pesan commit. Semua pesan commit berbahasa Inggris, **satu commit per langkah**, dan selalu `git add <file-spesifik>` (jangan `git add .`).
 
 | Patch | Berkas | Tujuan |
 |---|---|---|
@@ -19,6 +19,8 @@ Catatan lengkap semua patch (4.1 sampai 4.15) yang dibutuhkan agar bot berjalan 
 | 4.13 | `colab_leecher/__main__.py` | Tolak link Mega/Terabox di awal |
 | 4.14 | `colab_leecher/downlader/aria2.py` | Task dibatalkan saat aria2c gagal |
 | 4.15 | `downlader/telegram.py`, `manager.py` | Nama file media Telegram tanpa `file_name` |
+| 4.16 | `colab_leecher/utility/handler.py` | `cancelTask` membatalkan task paling akhir |
+| 4.17 | `colab_leecher/utility/handler.py` | `Leech()` berhenti bila task dibatalkan |
 
 ### 4.1 `colab_leecher/__init__.py`
 
@@ -423,6 +425,32 @@ Hasil yang benar: `photo_AQADxyz.jpg`, `a.txt.zip`, `video_vid1.mp4`.
 git add colab_leecher/downlader/telegram.py colab_leecher/downlader/manager.py
 git commit -m "fix(telegram): build a file name for media without one" -m "Photos have no file_name attribute, so hasattr() fell back to the literal string 'None', and media whose file_name is None (videos, voice notes, animations) would crash os.path.join. Add media_Name(), which returns the real name when present and otherwise builds one from the media type and file_unique_id with a sensible extension, and use it in both TelegramDownload and get_d_name."
 ```
+
+
+### 4.16 `cancelTask` membatalkan task paling akhir (`utility/handler.py`)
+
+`BOT.TASK` hampir selalu task yang sedang menjalankan `cancelTask` itu sendiri (dipanggil dari dalam tumpukan pemanggilan `Leech`). Memanggil `.cancel()` lebih awal menyuntikkan `CancelledError` di `await` berikutnya, sehingga pembersihan dan notifikasi di bawahnya terlewat. Urutan sekarang: hapus `WORK_PATH`, set `task_going = False`, hapus pesan status, kirim `#TASK_STOPPED` ke owner, dan **terakhir** batalkan task:
+
+```python
+            # Cancel LAST: everything the user needs to see has already
+            # been sent, so it is now safe to interrupt the call stack.
+            if BOT.TASK is not None:
+                BOT.TASK.cancel()
+```
+
+Diverifikasi uji 7.10 (27 November 2026). Commit: `3a38984`.
+
+### 4.17 `Leech()` berhenti bila task dibatalkan (`utility/handler.py`)
+
+Tombol Cancel menghapus `Paths.WORK_PATH` sementara `Leech()` masih berjalan, sehingga `os.stat` pada file yang sudah terhapus bisa memunculkan `FileNotFoundError`. `Leech()` kini memeriksa `BOT.State.task_going` di awal tiap iterasi dan setelah setiap langkah yang memakan waktu (cek ukuran, penyalinan, upload):
+
+```python
+        if not BOT.State.task_going:
+            return
+```
+
+Diverifikasi uji 7.10 (27 November 2026): tidak ada traceback saat Cancel di tengah upload maupun Compress. Commit: `169311c`.
+
 
 ### Belum dikerjakan (opsional)
 

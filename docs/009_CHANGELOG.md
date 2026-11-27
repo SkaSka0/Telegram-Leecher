@@ -55,6 +55,9 @@ Versi pertama fork lokal (Arch Linux), diturunkan dari versi Colab. Patch kode 4
 - `/drupload` mode Regular tidak lagi mengonversi atau menghapus file asli di folder pengguna.
 - Opsi yt-dlp `concurrent_fragment_downloads` sekarang benar-benar berlaku.
 - Import `GPUtil` yang rusak di Python 3.12 dihapus.
+- Tombol Cancel kini membersihkan folder kerja dan mengirim `#TASK_STOPPED` sebelum task diinterupsi (`cancelTask` memanggil `BOT.TASK.cancel()` paling akhir).
+- Menekan Cancel di tengah upload atau kompres tidak lagi memicu `FileNotFoundError` di `Leech()`.
+
 
 ### Dihapus
 
