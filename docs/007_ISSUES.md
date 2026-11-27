@@ -69,6 +69,13 @@ Pelacak tunggal untuk **bug**, **fitur**, dan **perbaikan** yang sudah teridenti
 - Area: `utility/task_manager.py` (`dump_task`, `src_text`), `utility/handler.py` (`SendLogs`)
 - Detail: teks dipotong di batas 4096 karakter Telegram. Uji dengan batch yang jumlah linknya cukup banyak untuk melewati batas itu.
 
+### BUG-007 · Perintah kedua tidak membatalkan prompt perintah pertama
+- Status: direncanakan
+- Prioritas: rendah
+- Area: `__main__.py` (`src_request_msg`, handler perintah), `utility/task_manager.py` (`task_starter`)
+- Detail: mengirim perintah kedua (misalnya `/lcupload`) sebelum membalas prompt perintah pertama (`/tupload`) meninggalkan dua prompt di chat. `BOT.Mode` dan `src_request_msg` global, sehingga hanya perintah terakhir yang berlaku, tetapi prompt lama tetap tampil dan menyesatkan. Target: perintah baru menggantikan yang lama (prompt lama dihapus, hanya mode terbaru yang berlaku).
+- Rencana: simpan referensi prompt aktif di satu tempat (misalnya `MSG.src_request_msg`), lalu di `task_starter` hapus prompt sebelumnya (dibungkus try/except) sebelum mengirim yang baru. Gejala "teks lain menjalankan perintah pertama" belum terlihat dari kode; konfirmasi dengan log saat dikerjakan.
+
 ### FEAT-001 · Nama file YouTube berupa judul, bukan ID video
 - Status: ide
 - Prioritas: rendah
