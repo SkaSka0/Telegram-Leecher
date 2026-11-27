@@ -1,6 +1,6 @@
 # Progress
 
-Terakhir diperbarui: 25 November 2026
+Terakhir diperbarui: 27 November 2026
 Branch kerja: `lokal`
 
 ## Status
@@ -24,15 +24,15 @@ Branch kerja: `lokal`
 | 7.5 | Google Drive | ⏸ Ditunda |
 | 7.6 | Konversi video (Convert dan Don't Convert) | ✅ Lolos |
 | 7.7 | Split video dan split file biasa | ✅ Lolos |
-| 7.8 | `/lcupload` | ⬜ Berikutnya |
-| 7.9 | `/drupload` | ⬜ Berikutnya |
-| 7.10 | Tombol Cancel | ⬜ Belum |
+| 7.8 | `/lcupload` | ✅ Lolos |
+| 7.9 | `/drupload` | ✅ Lolos |
+| 7.10 | Tombol Cancel | ✅ Lolos |
 
 Prosedur lengkap tiap uji ada di [005_TESTING.md](005_TESTING.md).
 
 ## Langkah berikutnya (berurutan)
 
-1. Selesaikan uji **7.8**, **7.9**, **7.10**.
+1. ✅ Uji **7.8**, **7.9**, **7.10** selesai (27 November 2026).
 2. Kerjakan [plans/001_batch-resilience.md](plans/001_batch-resilience.md): satu link gagal atau tidak valid tidak boleh menghentikan seluruh batch.
 3. Rapikan sisa: perbarui README.md utama ke cara pakai lokal dan tautkan folder docs/ (CHORE-003).
 4. Pilih pekerjaan dari [007_ISSUES.md](007_ISSUES.md).

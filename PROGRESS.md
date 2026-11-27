@@ -8,7 +8,7 @@ Daftar centang untuk pekerjaan **refactor** setelah konversi Colab ke lokal. Ala
 
 ## Prasyarat (kerjakan lebih dulu)
 
-- [ ] Uji 7.8 `/lcupload`, 7.9 `/drupload`, 7.10 tombol Cancel lolos
+- [x] Uji 7.8 `/lcupload`, 7.9 `/drupload`, 7.10 tombol Cancel lolos
       ([docs/005_TESTING.md](docs/005_TESTING.md))
 - [ ] [Batch resilience](docs/plans/001_batch-resilience.md) selesai (BUG-001).
       Ini juga menutup item lama "ganti `except Exception: pass` / bare
@@ -24,10 +24,10 @@ Belum boleh dianggap selesai sebelum diuji.
 - [ ] `gDownloadFile` menghapus file lama sebelum menulis (`gdrive.py`)
       **[DIPATCH, BELUM DIUJI]**. Diuji lewat 7.5 (Drive ditunda): retry dengan
       nama sama, bandingkan ukuran/checksum dengan sumber
-- [ ] `cancelTask()` memanggil `BOT.TASK.cancel()` paling akhir (`handler.py`)
-      **[DIPATCH, BELUM DIUJI]**. Diuji lewat 7.10
-- [ ] Penjagaan `BOT.State.task_going` di `Leech()` untuk race saat Cancel
-      **[DIPATCH, BELUM DIUJI]**. Diuji lewat 7.10; tidak boleh ada
+- [x] `cancelTask()` memanggil `BOT.TASK.cancel()` paling akhir (`handler.py`)
+      **[LOLOS 7.10]**
+- [x] Penjagaan `BOT.State.task_going` di `Leech()` untuk race saat Cancel
+      **[LOLOS 7.10]**; tidak ada
       `FileNotFoundError` di `os.stat`
 - [ ] Refresh otomatis `token.pickle` (`gdrive.py` → `build_service`)
       **[DIPATCH; SKENARIO VALID DAN KEDALUWARSA PERNAH LOLOS]**. Skenario token

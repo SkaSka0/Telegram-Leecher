@@ -35,28 +35,13 @@ Pelacak tunggal untuk **bug**, **fitur**, dan **perbaikan** yang sudah teridenti
 
 ## Terbuka
 
-### TEST-001 · Uji `/lcupload` (7.8)
-- Status: direncanakan
-- Prioritas: tinggi
-- Detail: prasyarat untuk mengerjakan BUG-001. Prosedur di [005_TESTING.md](005_TESTING.md#78-lcupload--berikutnya).
-
-### TEST-002 · Uji `/drupload` (7.9)
-- Status: direncanakan
-- Prioritas: tinggi
-- Detail: membuktikan patch 4.5 dan 4.7. Prosedur di [005_TESTING.md](005_TESTING.md#79-drupload--berikutnya).
-
-### TEST-003 · Uji tombol Cancel (7.10)
-- Status: direncanakan
-- Prioritas: tinggi
-- Detail: harus diulang setelah BUG-001 selesai karena `cancelTask` dipakai di banyak jalur. Prosedur di [005_TESTING.md](005_TESTING.md#710-tombol-cancel-).
-
 ### BUG-001 · Satu link gagal atau tidak valid membatalkan seluruh batch
 - Status: direncanakan
 - Prioritas: tinggi
 - Area: `downlader/manager.py`, `aria2.py`, `gdrive.py`, `telegram.py`, `ytdl.py`, `utility/handler.py`, `__main__.py`
 - Detail: satu link bermasalah membatalkan seluruh task dan menghapus file link yang sudah selesai. Target: link bermasalah dilewati, ada ringkasan di akhir, task dibatalkan hanya bila semua link gagal.
 - Rencana: [plans/001_batch-resilience.md](plans/001_batch-resilience.md)
-- Prasyarat: TEST-001, TEST-002, TEST-003 selesai dan `git status --short` bersih.
+- Prasyarat: TEST-001 sampai TEST-003 sudah selesai; tinggal `git status --short` bersih.
 
 ### BUG-002 · `media_Identifier` mengembalikan `None` untuk pesan tanpa media
 - Status: direncanakan (ditangani BUG-001, langkah 3)
@@ -147,7 +132,7 @@ Pelacak tunggal untuk **bug**, **fitur**, dan **perbaikan** yang sudah teridenti
 - Area: `colab_leecher/__init__.py`, `requirements.txt`, `.gitignore`, `.env.example` (baru), `docs/003_SETUP.md`, `docs/002_DEPENDENCIES.md`
 - Detail: konfigurasi dibaca dari environment (`API_ID`, `API_HASH`, `BOT_TOKEN`, `USER_ID`, `DUMP_ID`) lewat `python-dotenv`. Loader mengubah `API_ID`, `USER_ID`, `DUMP_ID` menjadi `int`, memvalidasi awalan `-100` pada `DUMP_ID`, dan gagal dengan pesan jelas bila ada nilai kosong. `credentials.json` tetap diterima sebagai cadangan selama satu rilis lalu dihapus. Manfaat: TEST-004 tidak butuh `credentials.json` palsu, dan layanan systemd (FEAT-003) bisa memakai `EnvironmentFile=`. Bukan perbaikan keamanan, karena kedua format sama-sama berkas teks yang di-gitignore.
 - Catatan: `.env` ditambahkan ke `.gitignore`, `.env.example` berisi placeholder dan di-commit. `my_bot.session` tetap rahasia dan sudah di-gitignore. `_version.py` tidak boleh mengimpor apa pun dari paket, supaya `./run.sh --version` tetap jalan tanpa konfigurasi.
-- Prasyarat: TEST-001, TEST-002, TEST-003 selesai. Rilis tersendiri (MINOR), jangan digabung dengan batch resilience (0.2.0).
+- Prasyarat: TEST-001 sampai TEST-003 sudah selesai. Rilis tersendiri (MINOR), jangan digabung dengan batch resilience (0.2.0).
 ---
 
 ## Selesai
@@ -155,3 +140,6 @@ Pelacak tunggal untuk **bug**, **fitur**, dan **perbaikan** yang sudah teridenti
 _(Format: `ID · judul · hash commit`)_
 
 - CHORE-001 · Hapus `main.py` (launcher Colab) · 59d6464
+- TEST-001 · Uji `/lcupload` (7.8) · lolos 2026-11-27, tanpa perubahan kode
+- TEST-002 · Uji `/drupload` (7.9) · lolos 2026-11-27, tanpa perubahan kode
+- TEST-003 · Uji tombol Cancel (7.10) · lolos 2026-11-27, tanpa perubahan kode (diulang setelah BUG-001)

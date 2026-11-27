@@ -74,11 +74,11 @@ git checkout -- colab_leecher/utility/variables.py
 grep -n "SPLIT_SIZE_MB =" colab_leecher/utility/variables.py
 ```
 
-### 7.8 `/lcupload` ⬜ (berikutnya)
+### 7.8 `/lcupload` ✅
 
 Kirim `/lcupload`, tempel `http://127.0.0.1:8000/a.txt`, mode **Regular**. Hasil yang diharapkan: file muncul di `~/Downloads/Leecher/` (bukan di Telegram), dan pesan akhir `#LOCAL-MIRROR_COMPLETE`.
 
-### 7.9 `/drupload` ⬜ (berikutnya)
+### 7.9 `/drupload` ✅
 
 Pakai **folder salinan**, bukan folder data asli:
 
@@ -97,6 +97,6 @@ find /tmp/drtest -type f | sort | diff - /tmp/drtest.before; and echo "folder as
 
 Hasil yang benar: `folder asli utuh` (bukti patch 4.7 bekerja: `clip.mov` tidak dikonversi atau dihapus). Uji juga Compress pada folder yang sama, lalu path di luar `/home` (misalnya `/tmp/...` seperti di atas) harus dikenali (bukti patch 4.5).
 
-### 7.10 Tombol Cancel ⬜
+### 7.10 Tombol Cancel ✅
 
 Mulai task dengan file yang lebih lambat (misalnya `big.bin` dengan batas split normal), tekan **Cancel ❌** di tengah proses. Hasil yang benar: pesan `#TASK_STOPPED` dengan `Reason » User Cancelled !` dan folder `BOT_WORK` terhapus. Setelah itu bot harus bisa menerima task baru.

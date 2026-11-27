@@ -17,8 +17,8 @@ Sudah ada di kode, tetapi belum tercatat di [010_PATCHES.md](../010_PATCHES.md) 
 | Patch | Berkas | Status | Verifikasi |
 |---|---|---|---|
 | Hapus file lama sebelum menulis (`gDownloadFile` tidak lagi menumpuk byte) | `gdrive.py` | Dipatch, belum diuji | Uji 7.5 (Drive ditunda), skenario "retry dengan nama sama": bandingkan ukuran/checksum dengan sumber |
-| `cancelTask()` memanggil `BOT.TASK.cancel()` paling akhir | `handler.py` | Dipatch, belum diuji | Uji 7.10 |
-| Penjagaan `BOT.State.task_going` di `Leech()` (race saat tombol Cancel ditekan) | `handler.py` | Dipatch, belum diuji | Uji 7.10; harus **tidak** ada `FileNotFoundError` di `os.stat` |
+| `cancelTask()` memanggil `BOT.TASK.cancel()` paling akhir | `handler.py` | Dipatch, **lolos uji 7.10** | Uji 7.10 |
+| Penjagaan `BOT.State.task_going` di `Leech()` (race saat tombol Cancel ditekan) | `handler.py` | Dipatch, **lolos uji 7.10** | Uji 7.10; harus **tidak** ada `FileNotFoundError` di `os.stat` |
 | Refresh otomatis `token.pickle` | `gdrive.py` (`build_service`) | Dipatch; skenario valid dan kedaluwarsa pernah lolos | Skenario token dicabut / format lama / berkas hilang menunggu 7.5 dan 7.10 |
 
 Catatan: refresh token otomatis **sudah selesai** (item "fitur" di roadmap lama adalah duplikat).
