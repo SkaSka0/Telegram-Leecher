@@ -1,6 +1,6 @@
 # Versioning
 
-Bot ini memakai **Semantic Versioning** dengan tiga angka: `MAJOR.MINOR.PATCH` (contoh `0.1.0`). Versi pertama fork lokal adalah **0.1.0**. Riwayat perubahan per versi ada di [CHANGELOG.md](CHANGELOG.md).
+Bot ini memakai **Semantic Versioning** dengan tiga angka: `MAJOR.MINOR.PATCH` (contoh `0.1.0`). Versi pertama fork lokal adalah **0.1.0**. Riwayat perubahan per versi ada di [009_CHANGELOG.md](009_CHANGELOG.md).
 
 ## Arti tiap angka
 
@@ -13,7 +13,7 @@ Bot ini memakai **Semantic Versioning** dengan tiga angka: `MAJOR.MINOR.PATCH` (
 Aturan tambahan:
 
 - Setiap kali angka naik, angka di kanannya **kembali ke 0** (`0.1.4` → `0.2.0`, `0.9.2` → `1.0.0`).
-- Selama MAJOR masih `0`, bot dianggap **belum stabil**: perubahan di MINOR boleh mengubah perilaku. Naik ke `1.0.0` setelah semua uji di [TESTING.md](TESTING.md) lolos dan rencana batch selesai.
+- Selama MAJOR masih `0`, bot dianggap **belum stabil**: perubahan di MINOR boleh mengubah perilaku. Naik ke `1.0.0` setelah semua uji di [005_TESTING.md](005_TESTING.md) lolos dan rencana batch selesai.
 - Perubahan dokumentasi saja (folder `docs/`, `README.md`) **tidak** menaikkan versi, kecuali dikerjakan bersama perubahan kode.
 - Satu rilis boleh berisi beberapa commit. Naikkan versi **sekali per rilis**, bukan per commit.
 
@@ -21,12 +21,12 @@ Aturan tambahan:
 
 1. Pastikan `git status --short` kosong dan uji yang relevan lolos.
 2. Tentukan angka baru dari tabel di atas.
-3. Di [CHANGELOG.md](CHANGELOG.md), pindahkan isi `[Belum dirilis]` ke bagian baru `## [X.Y.Z] - TAHUN-BULAN-TANGGAL`.
+3. Di [009_CHANGELOG.md](009_CHANGELOG.md), pindahkan isi `[Belum dirilis]` ke bagian baru `## [X.Y.Z] - TAHUN-BULAN-TANGGAL`.
 4. Ubah `__version__` di `colab_leecher/_version.py` (lihat "Sumber nomor versi").
 5. Commit dan beri tag:
 
 ```fish
-git add docs/CHANGELOG.md colab_leecher/_version.py
+git add docs/009_CHANGELOG.md colab_leecher/_version.py
 git commit -m "chore(release): v0.2.0" -m "Move the unreleased entries to 0.2.0 in the changelog."
 git tag -a v0.2.0 -m "v0.2.0"
 ```
@@ -41,7 +41,7 @@ Nomor versi hanya ditulis di **satu tempat**: `colab_leecher/_version.py`.
 __version__ = "0.1.1"
 ```
 
-Berkas ini sengaja tidak meng-import apa pun dari paket lain, sehingga bisa dibaca tanpa `credentials.json`. Semua yang lain (pesan `/start`, `/version`, log startup, `run.sh --version`) mengambil dari sini. Jangan menulis nomor versi di tempat lain selain [CHANGELOG.md](CHANGELOG.md) dan tag git.
+Berkas ini sengaja tidak meng-import apa pun dari paket lain, sehingga bisa dibaca tanpa `credentials.json`. Semua yang lain (pesan `/start`, `/version`, log startup, `run.sh --version`) mengambil dari sini. Jangan menulis nomor versi di tempat lain selain [009_CHANGELOG.md](009_CHANGELOG.md) dan tag git.
 
 ## Cara melihat versi
 

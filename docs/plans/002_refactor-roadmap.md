@@ -2,17 +2,17 @@
 
 Menggantikan `ROADMAP.md` lama (era Colab). Bagian yang sudah tidak relevan dibuang: sinkronisasi README untuk Mega/Terabox, `ProcessPoolExecutor` Mega, parsing progres Mega, retry Terabox, dan urutan pengujian yang bergantung pada notebook Colab.
 
-Pelacak per item ada di [ISSUES.md](../ISSUES.md). Berkas ini hanya menyimpan **alasan dan urutan**.
+Pelacak per item ada di [007_ISSUES.md](../007_ISSUES.md). Berkas ini hanya menyimpan **alasan dan urutan**.
 
 ## Prasyarat (jangan mulai refactor sebelum ini)
 
-1. Uji 7.8, 7.9, 7.10 di [TESTING.md](../TESTING.md) lolos.
-2. [batch-resilience.md](batch-resilience.md) selesai. Rencana itu mengambil alih "standarisasi penanganan error" (`LinkError` / `TaskAbort`), jadi refactor lain tidak boleh dibangun di atas pola error yang lama.
+1. Uji 7.8, 7.9, 7.10 di [005_TESTING.md](../005_TESTING.md) lolos.
+2. [001_batch-resilience.md](001_batch-resilience.md) selesai. Rencana itu mengambil alih "standarisasi penanganan error" (`LinkError` / `TaskAbort`), jadi refactor lain tidak boleh dibangun di atas pola error yang lama.
 3. `git status --short` bersih.
 
 ## Patch era Colab yang sudah ada di kode
 
-Sudah ada di kode, tetapi belum tercatat di [PATCHES.md](../PATCHES.md) maupun [CHANGELOG.md](../CHANGELOG.md). Catat saat verifikasi selesai.
+Sudah ada di kode, tetapi belum tercatat di [010_PATCHES.md](../010_PATCHES.md) maupun [009_CHANGELOG.md](../009_CHANGELOG.md). Catat saat verifikasi selesai.
 
 | Patch | Berkas | Status | Verifikasi |
 |---|---|---|---|
@@ -58,5 +58,5 @@ Catatan: refresh token otomatis **sudah selesai** (item "fitur" di roadmap lama 
 | Retry untuk Terabox | Terabox dihapus |
 | Refresh token Drive otomatis sebagai fitur | Sudah dikerjakan sebagai patch |
 | Resolver GDTot/Sharer/short link | Tidak ada di ruang lingkup fork lokal ([docs/README.md](../README.md)). Buka lagi hanya bila benar-benar dibutuhkan |
-| Standarisasi error handling | Digantikan [batch-resilience.md](batch-resilience.md) |
+| Standarisasi error handling | Digantikan [001_batch-resilience.md](001_batch-resilience.md) |
 | Penjelasan "kenapa Issue #2 sebelum #3" | Konteks pengujian di Colab, sudah selesai dipatch |

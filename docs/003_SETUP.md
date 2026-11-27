@@ -2,7 +2,7 @@
 
 Panduan memasang dan menjalankan fork lokal di Arch Linux dari nol. Perintah kompatibel **fish shell**.
 
-> **Catatan:** semua perubahan kode dari versi Colab sudah dicatat di [PATCHES.md](PATCHES.md). Kalau branch `lokal` sudah di-push, cukup `git clone -b lokal` dan **lewati** langkah patch. Kalau mengerjakan dari branch `main`, kerjakan [PATCHES.md](PATCHES.md) dulu sebelum menjalankan bot (langkah "Jalan pertama" di bawah).
+> **Catatan:** semua perubahan kode dari versi Colab sudah dicatat di [010_PATCHES.md](010_PATCHES.md). Kalau branch `lokal` sudah di-push, cukup `git clone -b lokal` dan **lewati** langkah patch. Kalau mengerjakan dari branch `main`, kerjakan [010_PATCHES.md](010_PATCHES.md) dulu sebelum menjalankan bot (langkah "Jalan pertama" di bawah).
 
 ## Catatan umum
 
@@ -17,7 +17,7 @@ Siapkan lima nilai: `API_ID`, `API_HASH` (dari https://my.telegram.org), `BOT_TO
 
 ## Langkah 1: Paket sistem
 
-Daftar lengkap paket wajib dan opsional, beserta fungsi tiap paket, ada di [DEPENDENCIES.md](DEPENDENCIES.md). Pasang paket wajib dari sana (satu perintah `pacman`), atur sinkronisasi jam (`timedatectl set-ntp true`, dijelaskan di berkas yang sama), lalu jalankan loop verifikasinya sampai tidak ada baris `MISSING`.
+Daftar lengkap paket wajib dan opsional, beserta fungsi tiap paket, ada di [002_DEPENDENCIES.md](002_DEPENDENCIES.md). Pasang paket wajib dari sana (satu perintah `pacman`), atur sinkronisasi jam (`timedatectl set-ntp true`, dijelaskan di berkas yang sama), lalu jalankan loop verifikasinya sampai tidak ada baris `MISSING`.
 
 ## Langkah 2: Clone, venv, dependency
 
@@ -92,7 +92,7 @@ git commit -m "build: add run script for the local environment" -m "Replace the 
 ./run.sh
 ```
 
-Opsi `./run.sh --version` mencetak versi tanpa menjalankan bot dan tanpa butuh `credentials.json`; opsi ini bekerja setelah `colab_leecher/_version.py` ada (mulai versi 0.1.1, lihat [VERSIONING.md](VERSIONING.md)). Bila belum ada, lewati dulu.
+Opsi `./run.sh --version` mencetak versi tanpa menjalankan bot dan tanpa butuh `credentials.json`; opsi ini bekerja setelah `colab_leecher/_version.py` ada (mulai versi 0.1.1, lihat [008_VERSIONING.md](008_VERSIONING.md)). Bila belum ada, lewati dulu.
 
 Log yang sehat berisi `Colab Leecher Started !` (diikuti nomor versi mulai 0.1.1) dan `Started 16 HandlerTasks` (16 adalah worker dispatcher Pyrogram, bukan jumlah handler kita). Uji dari akun owner: `/start`, `/settings`, `/help`, dan `/version` (mulai 0.1.1). Dari akun lain, bot **tidak boleh membalas sama sekali**.
 
@@ -121,4 +121,4 @@ systemctl --user enable --now telegram-leecher
 journalctl --user -u telegram-leecher -f
 ```
 
-Selanjutnya: [TESTING.md](TESTING.md) untuk menguji fitur satu per satu.
+Selanjutnya: [005_TESTING.md](005_TESTING.md) untuk menguji fitur satu per satu.

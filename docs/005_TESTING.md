@@ -1,8 +1,8 @@
 # Prosedur Uji Fitur
 
-Uji dikerjakan **satu per satu** dengan file uji lokal yang disajikan lewat server HTTP sementara, supaya tidak bergantung pada jaringan luar. Status hasil uji ada di [PROGRESS.md](PROGRESS.md).
+Uji dikerjakan **satu per satu** dengan file uji lokal yang disajikan lewat server HTTP sementara, supaya tidak bergantung pada jaringan luar. Status hasil uji ada di [001_PROGRESS.md](001_PROGRESS.md).
 
-Sebelum mulai, bot harus sudah jalan (`./run.sh`, lihat [SETUP.md](SETUP.md)).
+Sebelum mulai, bot harus sudah jalan (`./run.sh`, lihat [003_SETUP.md](003_SETUP.md)).
 
 ### Link uji
 
@@ -47,7 +47,7 @@ Salin link pesan dokumen dari channel dump (Copy Link, bentuk `https://t.me/c/<i
 
 ### 7.5 Google Drive ⏸
 
-Ditunda sampai token Google Drive dibuat (lihat [GDRIVE.md](GDRIVE.md)).
+Ditunda sampai token Google Drive dibuat (lihat [011_GDRIVE.md](011_GDRIVE.md)).
 
 ### 7.6 Konversi video ✅
 

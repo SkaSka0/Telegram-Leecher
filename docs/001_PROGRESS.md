@@ -8,9 +8,9 @@ Branch kerja: `lokal`
 | Area | Status |
 |---|---|
 | Setup (kredensial, paket, venv, dependency) | ✅ Selesai |
-| Patch kode 4.1 sampai 4.15 | ✅ Selesai ([PATCHES.md](PATCHES.md)) |
+| Patch kode 4.1 sampai 4.15 | ✅ Selesai ([010_PATCHES.md](010_PATCHES.md)) |
 | Bot berjalan lokal, filter owner terbukti menolak akun lain | ✅ Selesai |
-| Token Google Drive | ⏸ Ditunda ([GDRIVE.md](GDRIVE.md)) |
+| Token Google Drive | ⏸ Ditunda ([011_GDRIVE.md](011_GDRIVE.md)) |
 | Layanan systemd | ⬜ Opsional |
 
 ## Hasil uji fitur
@@ -28,15 +28,15 @@ Branch kerja: `lokal`
 | 7.9 | `/drupload` | ⬜ Berikutnya |
 | 7.10 | Tombol Cancel | ⬜ Belum |
 
-Prosedur lengkap tiap uji ada di [TESTING.md](TESTING.md).
+Prosedur lengkap tiap uji ada di [005_TESTING.md](005_TESTING.md).
 
 ## Langkah berikutnya (berurutan)
 
 1. Selesaikan uji **7.8**, **7.9**, **7.10**.
-2. Kerjakan [plans/batch-resilience.md](plans/batch-resilience.md): satu link gagal atau tidak valid tidak boleh menghentikan seluruh batch.
+2. Kerjakan [plans/001_batch-resilience.md](plans/001_batch-resilience.md): satu link gagal atau tidak valid tidak boleh menghentikan seluruh batch.
 3. Rapikan sisa: perbarui README.md utama ke cara pakai lokal dan tautkan folder docs/ (CHORE-003).
-4. Pilih pekerjaan dari [ISSUES.md](ISSUES.md).
-5. Opsional: [GDRIVE.md](GDRIVE.md) dan layanan systemd.
+4. Pilih pekerjaan dari [007_ISSUES.md](007_ISSUES.md).
+5. Opsional: [011_GDRIVE.md](011_GDRIVE.md) dan layanan systemd.
 
 ## Log keputusan
 

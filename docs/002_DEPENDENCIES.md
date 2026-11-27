@@ -1,6 +1,6 @@
 # Dependensi Sistem (Arch Linux)
 
-Daftar aplikasi yang harus terpasang **sebelum** menjalankan bot. Dependensi Python ada di `requirements.txt` dan dipasang ke `.venv` (lihat [SETUP.md](SETUP.md), Langkah 2). Perintah kompatibel **fish shell**.
+Daftar aplikasi yang harus terpasang **sebelum** menjalankan bot. Dependensi Python ada di `requirements.txt` dan dipasang ke `.venv` (lihat [003_SETUP.md](003_SETUP.md), Langkah 2). Perintah kompatibel **fish shell**.
 
 ## Wajib
 
@@ -43,7 +43,7 @@ Sinkronkan jam, supaya tidak muncul error `msg_id is too low/high` dari Telegram
 timedatectl set-ntp true
 ```
 
-Pastikan tidak ada konfigurasi aria2 pribadi yang berisi `daemon=true` (`~/.aria2/aria2.conf` atau `~/.config/aria2/aria2.conf`). Gejala dan solusinya ada di [TROUBLESHOOTING.md](TROUBLESHOOTING.md).
+Pastikan tidak ada konfigurasi aria2 pribadi yang berisi `daemon=true` (`~/.aria2/aria2.conf` atau `~/.config/aria2/aria2.conf`). Gejala dan solusinya ada di [006_TROUBLESHOOTING.md](006_TROUBLESHOOTING.md).
 
 ## Python
 
@@ -81,7 +81,7 @@ Lalu cek paket Python:
 .venv/bin/python -c 'import colab_leecher.downlader.manager; print("import OK")'
 ```
 
-Kalau `import OK` muncul, dependensi Python sudah lengkap. Bila `credentials.json` belum dibuat, perintah ini gagal dengan `FileNotFoundError`; selesaikan [SETUP.md](SETUP.md) Langkah 3 dulu.
+Kalau `import OK` muncul, dependensi Python sudah lengkap. Bila `credentials.json` belum dibuat, perintah ini gagal dengan `FileNotFoundError`; selesaikan [003_SETUP.md](003_SETUP.md) Langkah 3 dulu.
 
 ## Tidak diperlukan
 

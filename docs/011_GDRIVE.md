@@ -11,6 +11,6 @@ Dikerjakan kalau suatu saat butuh download dari link Google Drive. Ringkasnya:
 
 Tanpa `token.pickle`, link Drive hanya membuat task dibatalkan dengan pesan error (pesannya masih menyebut "Google Drive Cell", sisa Colab).
 
-Setelah token jadi, kerjakan uji 7.5 di [TESTING.md](TESTING.md): upload satu file kecil ke Drive, salin tautannya, kirim lewat `/tupload` mode Regular. Hasil yang benar: engine `G-Api`, nama file asli, `File Count` 1.
+Setelah token jadi, kerjakan uji 7.5 di [005_TESTING.md](005_TESTING.md): upload satu file kecil ke Drive, salin tautannya, kirim lewat `/tupload` mode Regular. Hasil yang benar: engine `G-Api`, nama file asli, `File Count` 1.
 
 Perhatikan: `google_auth.py` (versi Colab) masih ada di repo. Ganti dengan `gdrive_token.py` saat tahap ini dikerjakan.

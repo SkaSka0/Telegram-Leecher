@@ -426,5 +426,5 @@ git commit -m "fix(telegram): build a file name for media without one" -m "Photo
 
 ### Belum dikerjakan (opsional)
 
-- Hapus `google_auth.py` (versi Colab; diganti `gdrive_token.py` saat [GDRIVE.md](GDRIVE.md) dikerjakan).
+- Hapus `google_auth.py` (versi Colab; diganti `gdrive_token.py` saat [011_GDRIVE.md](011_GDRIVE.md) dikerjakan).
 - Perbarui `README.md` ke cara pakai lokal (instalasi, `run.sh`, daftar fitur final).

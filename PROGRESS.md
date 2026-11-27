@@ -1,6 +1,6 @@
 # Progress Refactor
 
-Daftar centang untuk pekerjaan **refactor** setelah konversi Colab ke lokal. Alasan dan urutan ada di [docs/plans/refactor-roadmap.md](docs/plans/refactor-roadmap.md). Pelacak per item ada di [docs/ISSUES.md](docs/ISSUES.md). Status konversi lokal dan hasil uji fitur ada di [docs/PROGRESS.md](docs/PROGRESS.md).
+Daftar centang untuk pekerjaan **refactor** setelah konversi Colab ke lokal. Alasan dan urutan ada di [docs/plans/002_refactor-roadmap.md](docs/plans/002_refactor-roadmap.md). Pelacak per item ada di [docs/007_ISSUES.md](docs/007_ISSUES.md). Status konversi lokal dan hasil uji fitur ada di [docs/001_PROGRESS.md](docs/001_PROGRESS.md).
 
 > Centang item hanya setelah perbaikannya ter-commit di kode, bukan saat baru dibahas atau direncanakan.
 
@@ -9,8 +9,8 @@ Daftar centang untuk pekerjaan **refactor** setelah konversi Colab ke lokal. Ala
 ## Prasyarat (kerjakan lebih dulu)
 
 - [ ] Uji 7.8 `/lcupload`, 7.9 `/drupload`, 7.10 tombol Cancel lolos
-      ([docs/TESTING.md](docs/TESTING.md))
-- [ ] [Batch resilience](docs/plans/batch-resilience.md) selesai (BUG-001).
+      ([docs/005_TESTING.md](docs/005_TESTING.md))
+- [ ] [Batch resilience](docs/plans/001_batch-resilience.md) selesai (BUG-001).
       Ini juga menutup item lama "ganti `except Exception: pass` / bare
       `logging.error` dengan propagasi atau notifikasi ke pengguna"
 - [ ] `git status --short` bersih
@@ -70,5 +70,5 @@ Belum boleh dianggap selesai sebelum diuji.
 ## Ad-hoc
 
 - [ ] Rancang format caption tetap untuk upload video (data dari JSON eksternal,
-      bukan dari berkas video). Belum ada entri di ISSUES.md; tambahkan sebagai
+      bukan dari berkas video). Belum ada entri di 007_ISSUES.md; tambahkan sebagai
       FEAT baru bila dikerjakan

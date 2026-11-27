@@ -1,10 +1,10 @@
 # Changelog
 
-Semua perubahan penting pada bot dicatat di sini. Aturan penomoran ada di [VERSIONING.md](VERSIONING.md) (`MAJOR.MINOR.PATCH`). Detail teknis tiap perubahan kode ada di [PATCHES.md](PATCHES.md).
+Semua perubahan penting pada bot dicatat di sini. Aturan penomoran ada di [008_VERSIONING.md](008_VERSIONING.md) (`MAJOR.MINOR.PATCH`). Detail teknis tiap perubahan kode ada di [010_PATCHES.md](010_PATCHES.md).
 
 ## [Belum dirilis]
 
-Rencana, belum dikerjakan (lihat [PLAN-BATCH-RESILIENCE.md](PLAN-BATCH-RESILIENCE.md)). Akan menjadi **0.2.0** bila selesai:
+Rencana, belum dikerjakan (lihat [plans/001_batch-resilience.md](plans/001_batch-resilience.md)). Akan menjadi **0.2.0** bila selesai:
 
 - Satu link gagal atau tidak valid tidak lagi membatalkan seluruh batch; link bermasalah dilewati dan dilaporkan di akhir.
 - File parsial dari link yang gagal dibersihkan.
@@ -24,7 +24,7 @@ Rencana, belum dikerjakan (lihat [PLAN-BATCH-RESILIENCE.md](PLAN-BATCH-RESILIENC
 - Perintah `/version` yang menampilkan metadata tersebut.
 - Baris versi pada balasan `/start` dan pada log saat bot mulai.
 - `./run.sh --version` untuk melihat versi tanpa menjalankan bot.
-- Dokumen `DEPENDENCIES.md` (daftar paket sistem Arch Linux) dan `VERSIONING.md`.
+- Dokumen `002_DEPENDENCIES.md` (daftar paket sistem Arch Linux) dan `008_VERSIONING.md`.
 
 ## [0.1.0] - 2026-11-25
 

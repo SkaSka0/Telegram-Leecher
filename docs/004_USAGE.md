@@ -58,7 +58,7 @@ Setiap kali Anda mengirim link, bot **mengosongkan** nama kustom dan kedua passw
 | Direct link | Lewat aria2 |
 | YouTube (`youtube.com`, `youtu.be`) | Lewat yt-dlp. Nama file hasil berupa ID video; tambahkan `[nama.mp4]` untuk nama lain |
 | Link pesan Telegram (`t.me/c/...`) | Bot harus menjadi member chat itu |
-| Google Drive | Butuh `token.pickle` ([GDRIVE.md](GDRIVE.md)) |
+| Google Drive | Butuh `token.pickle` ([011_GDRIVE.md](011_GDRIVE.md)) |
 | Magnet/torrent | Lewat aria2, tidak dijamin |
 | Path lokal | Hanya `/drupload` |
 | Mega, Terabox | **Tidak didukung** (dihapus) |
@@ -69,4 +69,4 @@ Setiap kali Anda mengirim link, bot **mengosongkan** nama kustom dan kedua passw
 - Potongan hasil split video tidak persis seukuran batas, karena pemotongan `-c copy` hanya bisa jatuh di keyframe.
 - `/drupload` mode Regular tidak mengonversi video; file asli di folder Anda tidak disentuh.
 - Arsip hasil Compress berisi folder dengan nama file di dalamnya (misalnya `a.txt/a.txt`); itu bawaan cara bot mengarsipkan.
-- Saat ini, jika salah satu link dalam satu task gagal, **seluruh task dibatalkan** dan file link yang sudah selesai ikut terhapus. Ini akan diubah oleh [plans/batch-resilience.md](plans/batch-resilience.md).
+- Saat ini, jika salah satu link dalam satu task gagal, **seluruh task dibatalkan** dan file link yang sudah selesai ikut terhapus. Ini akan diubah oleh [plans/001_batch-resilience.md](plans/001_batch-resilience.md).
